@@ -14,7 +14,7 @@ Class {
 		'attributes',
 		'spaces'
 	],
-	#category : #PPEsope
+	#category : #'PPEsope-Parser'
 }
 
 { #category : #accessing }
@@ -24,7 +24,7 @@ PPEsope >> attributes [
 
 { #category : #accessing }
 PPEsope >> declaration [
-	^ type, spaces, variable, $( asPParser, attributes, $) asPParser, spaces
+	^ type, spaces, variable, ($( asPParser, attributes, $) asPParser) optional
 ]
 
 { #category : #accessing }
@@ -39,7 +39,10 @@ PPEsope >> identifier [
 
 { #category : #accessing }
 PPEsope >> include [
-
+	self flag: #fixme. "#include <[^>]+>.
+	^\s*\#include\s+[""<]([^"">]+)*["">]
+	pour tester: https://regex101.com/
+	"
 	^ '#include' asPParser , self spaces , includeName
 ]
 
@@ -50,7 +53,7 @@ PPEsope >> includeName [
 
 { #category : #accessing }
 PPEsope >> line [
-	^ spaces, declaration, spaces
+	^ spaces, declaration
 ]
 
 { #category : #accessing }
@@ -100,5 +103,5 @@ PPEsope >> type [
 { #category : #accessing }
 PPEsope >> variable [
 	self flag: #fixme. "fixer la taille par exemple [a-zA-Z]{,7}"
-	^ #letter asPParser plus
+	^ #letter asPParser plus token
 ]
