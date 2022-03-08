@@ -20,7 +20,8 @@ Class {
 		'segsup',
 		'spaces',
 		'unknownLine',
-		'virgule'
+		'virgule',
+		'lineEnd'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -37,7 +38,7 @@ PPEsopeGrammar >> carriageReturn [
 
 { #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / unknownLine) plus
+	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / include / unknownLine) plus
 ]
 
 { #category : #accessing }
@@ -46,7 +47,7 @@ PPEsopeGrammar >> include [
 	^\s*\#include\s+[""<]([^"">]+)*["">]
 	pour tester: https://regex101.com/
 	"
-	^ '#include' asPParser, spaces, includeName
+	^ '#include' asPParser, spaces, includeName, lineEnd
 ]
 
 { #category : #accessing }
@@ -55,8 +56,19 @@ PPEsopeGrammar >> includeName [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> lineEmpty [
+	^ spaces /
+	 spaces lineEnd optional
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> lineEnd [
+	^ carriageReturn star
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> lineStart [
-	^ '      ' asPParser plus token
+	^ '      ' asPParser token
 ]
 
 { #category : #accessing }
@@ -77,7 +89,7 @@ PPEsopeGrammar >> notEndLine [
 { #category : #accessing }
 PPEsopeGrammar >> pointeur [
 	"^\s*pointeur\s*\w+\.\w+"
-	^ lineStart, 'pointeur' asPParser, spaces, pointeurName
+	^ lineStart, 'pointeur' asPParser, spaces, pointeurName, lineEnd
 ]
 
 { #category : #accessing }
@@ -92,12 +104,12 @@ PPEsopeGrammar >> rpar [
 
 { #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ lineStart, 'segact' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segact' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segadj [
-	^ lineStart, 'segadj' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segadj' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
@@ -105,17 +117,17 @@ PPEsopeGrammar >> segdef [
 
 	^ lineStart, 'segment' asPParser, spaces, virgule, segname, carriageReturn,
 	lines,
-	lineStart, 'end' asPParser , spaces, 'segment' asPParser 
+	lineStart, 'end' asPParser , spaces, 'segment' asPParser
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ lineStart, 'segdes' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segdes' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ lineStart, 'segini' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segini' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
@@ -125,7 +137,7 @@ PPEsopeGrammar >> segname [
 
 { #category : #accessing }
 PPEsopeGrammar >> segsup [
-	^ lineStart , 'segsup' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart , 'segsup' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
