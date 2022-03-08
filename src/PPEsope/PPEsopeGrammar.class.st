@@ -7,16 +7,19 @@ Class {
 		'include',
 		'identifier',
 		'lines',
-		'line',
 		'declaration',
 		'type',
 		'variable',
 		'attributes',
 		'spaces',
 		'virgule',
+		'segdef',
 		'segname',
+		'segini',
+		'segact',
 		'carriageReturn',
-		'lineStart'
+		'lineStart',
+		'notEndLine'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -66,23 +69,23 @@ PPEsopeGrammar >> includeName [
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> line [
-	^ lineStart, 'end' asPParser not, carriageReturn not plus, carriageReturn
-]
-
-{ #category : #accessing }
 PPEsopeGrammar >> lineStart [
-	^ '      ' asPParser
+	^ '      ' asPParser token
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> lines [
-	^ line star
+	^ notEndLine star
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> lpar [
 	^ $( asPParser 
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> notEndLine [
+	^ (lineStart, 'end' asPParser not, carriageReturn negate plus) token, carriageReturn
 ]
 
 { #category : #accessing }
@@ -97,6 +100,11 @@ PPEsopeGrammar >> rpar [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> segact [
+	^ lineStart , 'segact' asPParser, spaces , $, asPParser, spaces, segname
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> segdef [
 
 	^ lineStart, 'segment' asPParser, spaces, virgule, segname, carriageReturn,
@@ -106,8 +114,7 @@ PPEsopeGrammar >> segdef [
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ spaces , 'segini' asPParser , spaces , $, asPParser
-	  , #letter asPParser plus token
+	^ lineStart , 'segini' asPParser, spaces , $, asPParser, spaces, segname
 ]
 
 { #category : #accessing }
