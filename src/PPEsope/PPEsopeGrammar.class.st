@@ -1,5 +1,5 @@
 Class {
-	#name : #PPEsope,
+	#name : #PPEsopeGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
 		'includeName',
@@ -12,33 +12,47 @@ Class {
 		'type',
 		'variable',
 		'attributes',
-		'spaces'
+		'spaces',
+		'virgule',
+		'segname',
+		'carriageReturn',
+		'lineStart'
 	],
 	#category : #'PPEsope-Parser'
 }
 
+{ #category : #'as yet unclassified' }
+PPEsopeGrammar class >> getSourceFromFile: filename [
+	^ filename asFileReference contents asText
+]
+
 { #category : #accessing }
-PPEsope >> attributes [
+PPEsopeGrammar >> attributes [
 	^ variable
 ]
 
 { #category : #accessing }
-PPEsope >> declaration [
+PPEsopeGrammar >> carriageReturn [
+	^ Character cr asPParser
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> declaration [
 	^ type, spaces, variable, ($( asPParser, attributes, $) asPParser) optional
 ]
 
 { #category : #accessing }
-PPEsope >> extension [
+PPEsopeGrammar >> extension [
 	^ $. asPParser, ('seg' asPParser / 'h' asPParser)
 ]
 
 { #category : #accessing }
-PPEsope >> identifier [
+PPEsopeGrammar >> identifier [
  ^ (#letter asPParser , #word asPParser star, extension) flatten.
 ]
 
 { #category : #accessing }
-PPEsope >> include [
+PPEsopeGrammar >> include [
 	self flag: #fixme. "#include <[^>]+>.
 	^\s*\#include\s+[""<]([^"">]+)*["">]
 	pour tester: https://regex101.com/
@@ -47,61 +61,83 @@ PPEsope >> include [
 ]
 
 { #category : #accessing }
-PPEsope >> includeName [
+PPEsopeGrammar >> includeName [
 	^ ($" asPParser / $< asPParser), identifier, ($" asPParser  / $>  asPParser)
 ]
 
 { #category : #accessing }
-PPEsope >> line [
-	^ spaces, declaration
+PPEsopeGrammar >> line [
+	^ lineStart, 'end' asPParser not, carriageReturn not plus, carriageReturn
 ]
 
 { #category : #accessing }
-PPEsope >> lines [
+PPEsopeGrammar >> lineStart [
+	^ '      ' asPParser
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> lines [
 	^ line star
 ]
 
 { #category : #accessing }
-PPEsope >> lpar [
+PPEsopeGrammar >> lpar [
 	^ $( asPParser 
 ]
 
 { #category : #accessing }
-PPEsope >> rpar [
+PPEsopeGrammar >> pointeur [
+	"^\s*pointeur\s*\w+\.\w+"
+	^ variable
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> rpar [
 	^ $) asPParser 
 ]
 
 { #category : #accessing }
-PPEsope >> segdef [
+PPEsopeGrammar >> segdef [
 
-	^ spaces, 'segment' asPParser, spaces, $, asPParser
-	  , #letter asPParser plus token, spaces, lines, spaces, 'end' asPParser
-	  , spaces, 'segment'
+	^ lineStart, 'segment' asPParser, spaces, virgule, segname, carriageReturn,
+	lines,
+	lineStart, 'end' asPParser , spaces, 'segment' asPParser 
 ]
 
 { #category : #accessing }
-PPEsope >> segini [
+PPEsopeGrammar >> segini [
 	^ spaces , 'segini' asPParser , spaces , $, asPParser
 	  , #letter asPParser plus token
 ]
 
 { #category : #accessing }
-PPEsope >> spaces [
+PPEsopeGrammar >> segname [
+
+	^ #letter asPParser plus token
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> spaces [
 	^ #space asPParser star
 ]
 
 { #category : #accessing }
-PPEsope >> start [
+PPEsopeGrammar >> start [
 	^ include end
 ]
 
 { #category : #accessing }
-PPEsope >> type [
+PPEsopeGrammar >> type [
 	^ 'integer' asPParser / 'logical' asPParser / 'real' asPParser
 ]
 
 { #category : #accessing }
-PPEsope >> variable [
+PPEsopeGrammar >> variable [
 	self flag: #fixme. "fixer la taille par exemple [a-zA-Z]{,7}"
 	^ #letter asPParser plus token
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> virgule [
+	^ $, asPParser
 ]
