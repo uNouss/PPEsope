@@ -2,24 +2,25 @@ Class {
 	#name : #PPEsopeGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
-		'includeName',
-		'extension',
-		'include',
-		'identifier',
-		'lines',
-		'declaration',
-		'type',
-		'variable',
-		'attributes',
-		'spaces',
-		'virgule',
-		'segdef',
-		'segname',
-		'segini',
-		'segact',
 		'carriageReturn',
+		'file',
+		'include',
+		'includeName',
 		'lineStart',
-		'notEndLine'
+		'lines',
+		'notEndLine',
+		'pointeur',
+		'pointeurName',
+		'segact',
+		'segadj',
+		'segdef',
+		'segdes',
+		'segini',
+		'segname',
+		'segsup',
+		'spaces',
+		'unknownLine',
+		'virgule'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -30,28 +31,13 @@ PPEsopeGrammar class >> getSourceFromFile: filename [
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> attributes [
-	^ variable
-]
-
-{ #category : #accessing }
 PPEsopeGrammar >> carriageReturn [
 	^ Character cr asPParser
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> declaration [
-	^ type, spaces, variable, ($( asPParser, attributes, $) asPParser) optional
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> extension [
-	^ $. asPParser, ('seg' asPParser / 'h' asPParser)
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> identifier [
- ^ (#letter asPParser , #word asPParser star, extension) flatten.
+PPEsopeGrammar >> file [
+	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / unknownLine) plus
 ]
 
 { #category : #accessing }
@@ -60,17 +46,17 @@ PPEsopeGrammar >> include [
 	^\s*\#include\s+[""<]([^"">]+)*["">]
 	pour tester: https://regex101.com/
 	"
-	^ '#include' asPParser , self spaces , includeName
+	^ '#include' asPParser, spaces, includeName
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> includeName [
-	^ ($" asPParser / $< asPParser), identifier, ($" asPParser  / $>  asPParser)
+	^ ($" asPParser / $< asPParser), pointeurName, ($" asPParser  / $>  asPParser)
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> lineStart [
-	^ '      ' asPParser token
+	^ '      ' asPParser plus token
 ]
 
 { #category : #accessing }
@@ -91,7 +77,12 @@ PPEsopeGrammar >> notEndLine [
 { #category : #accessing }
 PPEsopeGrammar >> pointeur [
 	"^\s*pointeur\s*\w+\.\w+"
-	^ variable
+	^ lineStart, 'pointeur' asPParser, spaces, pointeurName
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> pointeurName [
+	^ (segname, $. asPParser, segname) token
 ]
 
 { #category : #accessing }
@@ -101,7 +92,12 @@ PPEsopeGrammar >> rpar [
 
 { #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ lineStart , 'segact' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segact' asPParser, spaces , $, asPParser, spaces, segname
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> segadj [
+	^ lineStart, 'segadj' asPParser, spaces , $, asPParser, spaces, segname
 ]
 
 { #category : #accessing }
@@ -113,14 +109,23 @@ PPEsopeGrammar >> segdef [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> segdes [
+	^ lineStart, 'segdes' asPParser, spaces , $, asPParser, spaces, segname
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ lineStart , 'segini' asPParser, spaces , $, asPParser, spaces, segname
+	^ lineStart, 'segini' asPParser, spaces , $, asPParser, spaces, segname
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segname [
-
 	^ #letter asPParser plus token
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> segsup [
+	^ lineStart , 'segsup' asPParser, spaces , $, asPParser, spaces, segname
 ]
 
 { #category : #accessing }
@@ -130,18 +135,12 @@ PPEsopeGrammar >> spaces [
 
 { #category : #accessing }
 PPEsopeGrammar >> start [
-	^ include end
+	^ file end
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> type [
-	^ 'integer' asPParser / 'logical' asPParser / 'real' asPParser
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> variable [
-	self flag: #fixme. "fixer la taille par exemple [a-zA-Z]{,7}"
-	^ #letter asPParser plus token
+PPEsopeGrammar >> unknownLine [
+	^ (carriageReturn negate plus) token, carriageReturn
 ]
 
 { #category : #accessing }
