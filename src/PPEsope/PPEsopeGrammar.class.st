@@ -3,6 +3,7 @@ Class {
 	#superclass : #PP2CompositeNode,
 	#instVars : [
 		'carriageReturn',
+		'commentLine',
 		'file',
 		'include',
 		'includeName',
@@ -37,8 +38,18 @@ PPEsopeGrammar >> carriageReturn [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> commentLine [
+	^ $c asPParser, (carriageReturn negate plus) token, carriageReturn
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> eof [
+	^ carriageReturn
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / include / unknownLine) plus
+	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / include / commentLine / unknownLine) plus
 ]
 
 { #category : #accessing }

@@ -1,51 +1,51 @@
 Class {
 	#name : #PPEsopeGrammarTest,
-	#superclass : #TestCase,
+	#superclass : #PP2CompositeNodeTest,
 	#category : #'PPEsope-Tests'
 }
 
+{ #category : #accessing }
+PPEsopeGrammarTest >> parserClass [
+	^ PPEsopeGrammar
+]
+
+{ #category : #tests }
+PPEsopeGrammarTest >> testCommentLine [
+	self parse: 'c#include <implicit.h>' rule: #commentLine.
+	self parse: 'cxxxxxxxxxxxxxxxxxxxxxxx' rule: #commentLine.
+	
+	self fail: ' cxxxxxxxxxxxxxxxxxxxxxxx' rule: #commentLine.
+	self fail: '!#include <implicit.h>' rule: #commentLine.
+]
+
 { #category : #tests }
 PPEsopeGrammarTest >> testInclude [
-
-	| string |
-	string := '#include <implicit.h>'.
-	self assert: (PPEsopeGrammar parse: string startingAt: #include) isPetit2Success.
-	
-	string := '#include "implicit.h"'.
-	self assert: (PPEsopeGrammar parse: string startingAt: #include) isPetit2Success
+	self parse: '#include <implicit.h>' rule: #include.
+	self parse: '#include "string.seg"' rule: #include
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testPointeur [
-
-	| string parsing |
-	string := '      pointeur splist.list'.
-	parsing := PPEsopeGrammar parse: string startingAt: #pointeur.
-	self assert: parsing isPetit2Success
+	self parse: '      pointeur splist.list' rule: #pointeur.
+	self fail: 'pointeur splist.list' rule: #pointeur.
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegAct [
-
-	| string parsing |
-	string := '      segact,splist'.
-	parsing := PPEsopeGrammar parse: string startingAt: #segact.
-	self assert: parsing isPetit2Success
+	self parse: '      segact,splist' rule: #segact.
+	self fail: 'segact,splist' rule: #segact.
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegAdj [
-
-	| string parsing |
-	string := '      segadj,alist'.
-	parsing := PPEsopeGrammar parse: string startingAt: #segadj.
-	self assert: parsing isPetit2Success
+	self parse: '      segadj,alist' rule: #segadj.
+	self fail: 'segadj,alist' rule: #segadj.
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegDef [
 
-	| segment parser |
+	| segment |
 	segment := '      segment,values
         character*8        valtyp
         real               valf(valnf)
@@ -54,33 +54,29 @@ PPEsopeGrammarTest >> testSegDef [
         character*(valsmx) valc(valnc)
         integer            vals(valnc)
       endsegment'.
-	parser := PPEsopeGrammar parse: segment startingAt: #segdef.
-	self assert: parser isPetit2Success
+	self parse: segment rule: #segdef.
+	self fail: '      segment,values' rule: #segdef
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegDes [
-
-	| string parsing |
-	string := '      segdes,alist'.
-	parsing := PPEsopeGrammar parse: string startingAt: #segdes.
-	self assert: parsing isPetit2Success
+	self parse: '      segdes,alist' rule: #segdes.
+	self fail: 'segdes,alist' rule: #segdes.
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegIni [
-
-	| segini parsing |
-	segini := '      segini,rlist'.
-	parsing := PPEsopeGrammar parse: segini startingAt: #segini.
-	self assert: parsing isPetit2Success
+	self parse: '      segini,rlist' rule: #segini.
+	self fail: 'segini,rlist' rule: #segini.
 ]
 
 { #category : #tests }
 PPEsopeGrammarTest >> testSegSup [
+	self parse: '      segsup,rlist' rule: #segsup.
+	self fail: 'segsup,rlist' rule: #segsup.
+]
 
-	| string parsing |
-	string := '      segsup,rlist'.
-	parsing := PPEsopeGrammar parse: string startingAt: #segsup.
-	self assert: parsing isPetit2Success
+{ #category : #tests }
+PPEsopeGrammarTest >> testUnknownLine [
+	self parse: '      subroutine test(brr)' rule: #unknownLine.
 ]
