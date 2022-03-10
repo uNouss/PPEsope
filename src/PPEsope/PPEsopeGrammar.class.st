@@ -3,15 +3,12 @@ Class {
 	#superclass : #PP2CompositeNode,
 	#instVars : [
 		'carriageReturn',
-		'commentLine',
 		'file',
 		'include',
 		'includeName',
 		'lineStart',
-		'lines',
-		'notEndLine',
-		'pointeur',
-		'pointeurName',
+		'pointer',
+		'pointerName',
 		'segact',
 		'segadj',
 		'segdef',
@@ -21,8 +18,11 @@ Class {
 		'segsup',
 		'spaces',
 		'unknownLine',
-		'virgule',
-		'lineEnd'
+		'lineEnd',
+		'notEndLine',
+		'lines',
+		'identifier',
+		'comma'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -38,38 +38,28 @@ PPEsopeGrammar >> carriageReturn [
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> commentLine [
-	^ $c asPParser, (carriageReturn negate plus) token, carriageReturn
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> eof [
-	^ carriageReturn
+PPEsopeGrammar >> comma [
+	^ $, asPParser
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segdef / segini / segact / segadj / segdes / segsup / pointeur / include / commentLine / unknownLine) plus
+	^ (segdef / segini / segact / segadj / segdes / segsup / pointer / unknownLine) plus
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> identifier [
+	^ #letter asPParser , #word asPParser star.
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> include [
-	self flag: #fixme. "#include <[^>]+>.
-	^\s*\#include\s+[""<]([^"">]+)*["">]
-	pour tester: https://regex101.com/
-	"
 	^ '#include' asPParser, spaces, includeName, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> includeName [
-	^ ($" asPParser / $< asPParser), pointeurName, ($" asPParser  / $>  asPParser)
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> lineEmpty [
-	^ spaces /
-	 spaces lineEnd optional
+	^ ($" asPParser / $< asPParser), (identifier, $. asPParser, identifier) token, ($" asPParser  / $>  asPParser)
 ]
 
 { #category : #accessing }
@@ -84,12 +74,7 @@ PPEsopeGrammar >> lineStart [
 
 { #category : #accessing }
 PPEsopeGrammar >> lines [
-	^ notEndLine star
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> lpar [
-	^ $( asPParser 
+	^ notEndLine star 
 ]
 
 { #category : #accessing }
@@ -98,14 +83,13 @@ PPEsopeGrammar >> notEndLine [
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> pointeur [
-	"^\s*pointeur\s*\w+\.\w+"
-	^ lineStart, 'pointeur' asPParser, spaces, pointeurName, lineEnd
+PPEsopeGrammar >> pointer [
+	^ lineStart, 'pointeur' asPParser, spaces, pointerName, lineEnd
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> pointeurName [
-	^ (segname, $. asPParser, segname) token
+PPEsopeGrammar >> pointerName [
+	^ (identifier, $. asPParser, identifier) token
 ]
 
 { #category : #accessing }
@@ -115,30 +99,30 @@ PPEsopeGrammar >> rpar [
 
 { #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ lineStart, 'segact' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
+	^ lineStart, 'segact' asPParser, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segadj [
-	^ lineStart, 'segadj' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
+	^ lineStart, 'segadj' asPParser, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdef [
 
-	^ lineStart, 'segment' asPParser, spaces, virgule, segname, carriageReturn,
+	^ lineStart, 'segment' asPParser, spaces, comma, segname, lineEnd,
 	lines,
-	lineStart, 'end' asPParser , spaces, 'segment' asPParser
+	lineStart, 'end' asPParser , spaces, 'segment' asPParser, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ lineStart, 'segdes' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
+	^ lineStart, 'segdes' asPParser, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ lineStart, 'segini' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
+	^ lineStart, 'segini' asPParser, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
@@ -148,7 +132,7 @@ PPEsopeGrammar >> segname [
 
 { #category : #accessing }
 PPEsopeGrammar >> segsup [
-	^ lineStart , 'segsup' asPParser, spaces , $, asPParser, spaces, segname, lineEnd
+	^ lineStart , 'segsup' asPParser, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }
@@ -164,9 +148,4 @@ PPEsopeGrammar >> start [
 { #category : #accessing }
 PPEsopeGrammar >> unknownLine [
 	^ (carriageReturn negate plus) token, carriageReturn
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> virgule [
-	^ $, asPParser
 ]
