@@ -64,7 +64,7 @@ PPEsopeGrammar >> includeName [
 
 { #category : #accessing }
 PPEsopeGrammar >> lineEnd [
-	^ carriageReturn star
+	^ carriageReturn plus
 ]
 
 { #category : #accessing }
