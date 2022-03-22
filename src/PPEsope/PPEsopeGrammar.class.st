@@ -117,7 +117,7 @@ PPEsopeGrammar >> segdef [
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ lineStart, 'segdes' asPParser, spaces , comma, spaces, segname, lineEnd
+	^ lineStart, 'segdes' asPParser token, spaces , comma, spaces, segname, lineEnd
 ]
 
 { #category : #accessing }

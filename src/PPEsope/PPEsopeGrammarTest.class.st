@@ -194,7 +194,7 @@ c
 
 { #category : #accessing }
 PPEsopeGrammarTest >> parserClass [
-	^ PPEsopeGrammar
+	^ PPEsopeParser
 ]
 
 { #category : #tests }
