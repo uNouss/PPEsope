@@ -2,910 +2,1485 @@ Class {
 	#name : #PPFortranGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
-		'ident',
-		'id',
-		'commentOrNewLine',
-		'comment',
-		'newLine',
-		'in6',
-		'executableProgram',
-		'ex6',
-		'programUnit',
-		'mainProgram',
-		'functionSubProgram',
-		'subroutineSubProgram',
-		'blockDataSubProgram',
-		'programStmt',
-		'mainRange',
-		'body',
-		'endProgramStmt',
-		'lblDef',
-		'eos',
-		'bodyConstruct',
-		'specificationPartConstruct',
-		'executableConstruct',
-		'implicitStmt',
-		'parameterStmt',
-		'formatStmt',
-		'entryStmt',
-		'declarationConstruct',
-		'includeStmt',
-		'scon',
-		'typeDeclarationStmt',
-		'specificationStmt',
-		'functionPrefix',
-		'functionName',
-		'functionRange',
-		'functionParList',
-		'endFunctionStmt',
-		'subroutineName',
-		'subroutineRange',
-		'subroutineParList',
-		'endSubroutineStmt',
-		'blockDataStmt',
-		'blockDataBody',
-		'endBlockDataStmt',
-		'blockDataBodyConstruct',
-		'comonStmt',
-		'dataStmt',
-		'dimensionStmt',
-		'equivalenceStmt',
-		'externalStmt',
-		'intrinsicStmt',
-		'saveStmt',
 		'actionStmt',
-		'doConstruct',
-		'ifConstruct',
 		'arithmeticIfStmt',
-		'assignmentStmt',
+		'arrayDeclarator',
+		'arrayDeclaratorList',
+		'arrayElement',
+		'arraySpec',
 		'assignStmt',
-		'backspaceStmt',
-		'callStmt',
-		'closeStmt',
-		'continueStmt',
-		'endfileStmt',
-		'gotoStmt',
-		'computedGotoStmt',
 		'assignedGotoStmt',
+		'assignmentStmt',
+		'assumedSizeSpec',
+		'backspaceStmt',
+		'blockDataBody',
+		'blockDataBodyConstruct',
+		'blockDataName',
+		'blockDataStmt',
+		'blockDataSubProgram',
+		'blockDataSubprogram',
+		'body',
+		'bodyConstruct',
+		'callStmt',
+		'charLength',
+		'closeStmt',
+		'comblock',
+		'comlist',
+		'comma',
+		'commaExpr',
+		'commaInputItemList',
+		'commaLoopControl',
+		'commaSectionSubscript',
+		'comment',
+		'commentOrNewLine',
+		'commonBlockName',
+		'commonBlockObject',
+		'comonStmt',
+		'computedGotoStmt',
+		'conditionalBody',
+		'constant',
+		'continueStmt',
+		'dataIDoObject',
+		'dataIDoObjectList',
+		'dataImpliedDo',
+		'dataImpliesdDo',
+		'dataStmt',
+		'dataStmtObject',
+		'dataStmtObjectList',
+		'dataStmtSet',
+		'dataStmtValue',
+		'dataStmtValueList',
+		'datalist',
+		'declarationConstruct',
+		'dimensionStmt',
+		'doConstruct',
+		'doLabelStmt',
+		'doLblDef',
+		'doLblRef',
+		'dummyArgName',
+		'elseConstruct',
+		'elseIfConstruct',
+		'elseIfStmt',
+		'elseStmt',
+		'endBlockDataStmt',
+		'endFunctionStmt',
+		'endIfStmt',
+		'endProgramStmt',
+		'endSubroutineStmt',
+		'endfileStmt',
+		'entityDecl',
+		'entityDeclList',
+		'entryName',
+		'entryStmt',
+		'eos',
+		'epsilon',
+		'equivalenceObject',
+		'equivalenceObjectList',
+		'equivalenceSet',
+		'equivalenceSetList',
+		'equivalenceStmt',
+		'ex6',
+		'ex_2',
+		'ex_6',
+		'executableConstruct',
+		'executableProgram',
+		'executionPartConstruct',
+		'explicitShapeSpec',
+		'explicitShapeSpecList',
+		'expr',
+		'externalName',
+		'externalNameList',
+		'externalStmt',
+		'formatStmt',
+		'functionName',
+		'functionPar',
+		'functionParList',
+		'functionPars',
+		'functionPrefix',
+		'functionRange',
+		'functionSubProgram',
+		'functionSubprogram',
+		'gotoKw',
+		'gotoStmt',
+		'icon',
+		'iconOrScon',
+		'id',
+		'ident',
+		'ifConstruct',
 		'ifStmt',
+		'ifThenStmt',
+		'implicitRange',
+		'implicitRanges',
+		'implicitSpec',
+		'implicitSpecList',
+		'implicitStmt',
+		'impliedDoVariable',
+		'in_2',
+		'in_6',
+		'includeStmt',
+		'inputItemList',
 		'inquireStmt',
+		'intrinsicList',
+		'intrinsicProcedureName',
+		'intrinsicStmt',
+		'ioControlSpecList',
+		'label',
+		'labelDoStmt',
+		'lblDef',
+		'lblRef',
+		'lblRefList',
+		'lengthSelector',
+		'loopControl',
+		'lowerBound',
+		'lpar',
+		'mainProgram',
+		'mainRange',
+		'name',
+		'namedConstant',
+		'namedConstantDef',
+		'namedConstantDefList',
+		'namedConstantUse',
+		'newLine',
+		'objectName',
 		'openStmt',
+		'outputItemList',
+		'parameterStmt',
 		'pauseStmt',
 		'printStmt',
+		'programName',
+		'programStmt',
+		'programUnit',
+		'rdCtlSpec',
+		'rdFmtId',
+		'rdIoCtlSpecList',
+		'rdUnitId',
 		'readStmt',
 		'returnStmt',
 		'rewindStmt',
-		'stmtFunctionStmt',
-		'stopStmt',
-		'writeStmt',
-		'programName',
-		'typeSpec',
-		'functionPars',
-		'epsilon',
-		'functionPar',
-		'dummyArgName',
-		'lpar',
-		'subroutinePars',
 		'rpar',
-		'subroutinePar',
-		'entryName',
-		'name',
-		'blockDataName',
-		'arrayDeclaratorList',
-		'arrayDeclarator',
-		'variableName',
-		'arraySpec',
-		'explicitShapeSpecList',
-		'assumedSizeSpec',
-		'explicitShapeSpec',
-		'lowerBound',
-		'upperBound',
-		'expr',
-		'equivalenceSetList',
-		'equivalenceSet',
-		'equivalenceObject',
-		'equivalenceObjectList',
-		'comma',
-		'variable',
-		'comlist',
-		'comblock',
-		'commonBlockObject',
+		'saveStmt',
+		'savedCommonBlock',
+		'savedEntity',
+		'savedEntityList',
+		'scon',
+		'sectionSubscript',
+		'sfExprList',
+		'sfExprListRef',
+		'specificationPartConstruct',
+		'specificationStmt',
 		'spoff',
 		'spon',
-		'commonBlockName',
-		'entityDeclList',
-		'lengthSelector',
-		'entityDecl',
-		'objectName',
-		'charLength',
-		'implicitSpecList',
-		'implicitSpec',
-		'implicitRanges',
-		'implicitRange',
-		'typeParamValue',
-		'constant',
-		'namedConstantDefList',
-		'namedConstantDef',
-		'namedConstant',
-		'externalNameList',
-		'externalName',
-		'intrinsicList',
-		'intrinsicProcedureName',
-		'savedEntityList',
-		'savedEntity',
-		'savedCommonBlock',
-		'datalist',
-		'dataStmtSet',
-		'dataStmtObjectList',
-		'dataStmtValueList',
-		'dataStmtObject',
-		'dataImpliesdDo',
-		'dataStmtValue',
-		'namedConstantUse',
-		'dataIDoObjectList',
-		'impliedDoVariable',
-		'dataIDoObject',
-		'arrayElement',
-		'dataImpliedDo',
-		'sfExprListRef',
+		'stmtFunctionStmt',
+		'stopStmt',
+		'subroutineName',
+		'subroutinePar',
+		'subroutineParList',
+		'subroutinePars',
+		'subroutineRange',
+		'subroutineSubProgram',
+		'subroutineSubprogram',
 		'substringRange',
-		'sfExprList',
-		'commaSectionSubscript',
-		'sectionSubscript',
-		'lblRef',
-		'goToKw',
-		'lblRefList',
-		'label',
+		'tab_2',
+		'tab_9',
+		'typeDeclarationStmt',
+		'typeParamValue',
+		'typeSpec',
+		'uFExpr',
+		'upperBound',
+		'variable',
 		'variableComma',
-		'ifThenStmt',
-		'conditionalBody',
-		'elseIfConstruct',
-		'elseConstruct',
-		'endIfStmt',
-		'elseIfStmt',
-		'elseStmt',
-		'executionPartConstruct',
-		'in2',
-		'ex2',
-		'labelDoStmt',
-		'doLblRef',
-		'commaLoopControl',
-		'doLblDef',
-		'doLabelStmt',
-		'loopControl',
-		'icon',
-		'tab2',
-		'tab9',
-		'commaExpr',
-		'iconOrScon',
-		'ioControlSpecList',
-		'outputItemList',
-		'rdCtlSpec',
-		'inputItemList',
-		'rdFmtId',
-		'commaInputItemList',
-		'rdUnitId',
-		'rdIoCtlSpecList',
-		'uFExpr'
+		'variableName',
+		'writeStmt',
+		'commonStmt',
+		'comBlock',
+		'unitIdentifier',
+		'ioControlSpec',
+		'formatIdentifier',
+		'cOperand',
+		'concatOp',
+		'cPrimary',
+		'rdFmtIdExpr',
+		'scalarVariable',
+		'inputItem',
+		'nameDataRef',
+		'inputImpliedDo',
+		'outputItemList1',
+		'outputImpliedDo',
+		'connectSpecList',
+		'unitIdentifierComma',
+		'connectSpec',
+		'cExpr',
+		'closeSpecList',
+		'closeSpec',
+		'inquireSpecList',
+		'inquireSpec',
+		'positionSpecList',
+		'positionSpec',
+		'fmtSpec',
+		'formatEdit',
+		'formatSep',
+		'editElement',
+		'xcon',
+		'pcon',
+		'fcon',
+		'mislexedFcon',
+		'hcon',
+		'rdcon',
+		'stmtFunctionRange',
+		'sfDummyArgNameList',
+		'sfDummyArgName',
+		'subroutineNameUse',
+		'subroutineArgList',
+		'subroutineArg',
+		'complexDataRefTail',
+		'sectionSubscriptRef',
+		'sectionSubscriptList',
+		'subscriptTripletTail',
+		'level5Expr',
+		'unsignedArithmeticConstant',
+		'functionReference',
+		'primary',
+		'level1Expr',
+		'powerUpMultOperand',
+		'powerOp',
+		'multOperand',
+		'multOpMultOperand',
+		'multOp',
+		'sign',
+		'addOperand',
+		'addOpAddOperand',
+		'addOp',
+		'uFTerm',
+		'uFFactor',
+		'uFPrimary',
+		'cPrimaryConcatOp',
+		'level2Expr',
+		'concatOpLevel2Expr'
 	],
 	#category : #'PPEsope-Parser'
 }
 
-{ #category : #accessing }
-PPFortranGrammar >> BlockDataStmt [
-	^ lblDef, 'blockdata' asPParser, blockDataName optional, eos
-]
-
-{ #category : #accessing }
-PPFortranGrammar >> CharLength [
-	^ (lpar, typeParamValue, rpar) / constant
-]
-
-{ #category : #accessing }
-PPFortranGrammar >> DoubleDoStmt [
-	^ 'do' asPParser, lblRef, commaLoopControl, eos
-]
-
-{ #category : #accessing }
-PPFortranGrammar >> TypeDeclarationStmt [
-	^ lblDef, typeSpec, entityDeclList, eos
-]
-
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> actionStmt [
-	^ arithmeticIfStmt /
-	assignmentStmt /
-	assignStmt /
-	backspaceStmt /
-	callStmt /
-	closeStmt /
-	continueStmt /
-	endfileStmt /
-	gotoStmt /
-	computedGotoStmt /
-	assignedGotoStmt /
-	ifStmt /
-	inquireStmt /
-	openStmt /
-	pauseStmt /
-	printStmt /
-	readStmt /
-	returnStmt /
-	rewindStmt /
-	stmtFunctionStmt /
-	stopStmt /
-	writeStmt
+	^ arithmeticIfStmt
+	/ assignmentStmt
+	/ assignStmt
+	/ backspaceStmt
+	/ callStmt
+	/ closeStmt
+	/ continueStmt
+	/ endfileStmt
+	/ gotoStmt
+	/ computedGotoStmt
+	/ assignedGotoStmt
+	/ ifStmt
+	/ inquireStmt
+	/ openStmt
+	/ pauseStmt
+	/ printStmt
+	/ readStmt
+	/ returnStmt
+	/ rewindStmt
+	/ stmtFunctionStmt
+	/ stopStmt
+	/ writeStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> addOp [
+	^ $+ asPParser
+	/ $- asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> addOpAddOperand [
+	^ addOp, addOperand
+]
+
+{ #category : #rules }
+PPFortranGrammar >> addOperand [
+	^ multOperand, multOpMultOperand star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> arithmeticIfStmt [
-	^ lblDef, 'if' asPParser, lpar, expr, rpar, lblRef, comma, lblRef, comma, lblRef, eos
+	^ lblDef, 'if' asPParser, lpar,  expr, rpar, lblRef, comma, lblRef, comma, lblRef, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> arrayDeclarator [
-	^ variableName, lpar, arraySpec, rpar
+	^ variableName, lpar,  arraySpec, rpar
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> arrayDeclaratorList [
 	^ arrayDeclarator plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> arraySpec [
-	^ explicitShapeSpecList / assumedSizeSpec
+	^ explicitShapeSpecList
+	/ assumedSizeSpec
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> assignStmt [
 	^ lblDef, 'assign' asPParser, lblRef, 'to' asPParser, variableName, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> assignedGotoStmt [
-	^ (lblDef, goToKw, variableName, eos) /
-	(lblDef, goToKw, variableName , lpar, lblRefList, rpar, eos) /
-	(lblDef, goToKw, variableComma, lpar, lblRefList, rpar, eos)
+	^ (lblDef, gotoKw, variableName, eos)
+	/ (lblDef, gotoKw, variableName, lpar,  lblRefList, rpar, eos)
+	/ (lblDef, gotoKw, variableComma, lpar,  lblRefList, rpar, eos)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> assignmentStmt [
 	^ lblDef, name, sfExprListRef optional, substringRange optional, $= asPParser, expr, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> assumedSizeSpec [
-	^ $* asPParser /
-	(lowerBound, $: asPParser,  $* asPParser) /
-	(explicitShapeSpecList, $, asPParser, $*) /
-	(explicitShapeSpecList, $, asPParser, lowerBound, $: asPParser, $* asPParser)
+	^ $* asPParser
+	/ (lowerBound, $: asPParser, $* asPParser)
+	/ (explicitShapeSpecList, comma, $* asPParser)
+	/ (explicitShapeSpecList, comma, lowerBound, $: asPParser, $* asPParser)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> backspaceStmt [
+	^ (lblDef, 'backspace' asPParser, unitIdentifier, eos)
+	/ (lblDef, 'backspace' asPParser, lpar,  positionSpecList, rpar, eos)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> blockDataBody [
-	^ blockDataBodyConstruct / (blockDataBody, blockDataBodyConstruct)
+	^ blockDataBodyConstruct
+	/ (blockDataBody blockDataBodyConstruct)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> blockDataBodyConstruct [
 	^ specificationPartConstruct
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> blockDataSubprogram [
-	^ blockDataStmt, blockDataBody, endBlockDataStmt /
-		blockDataStmt, endBlockDataStmt
+{ #category : #rules }
+PPFortranGrammar >> blockDataStmt [
+	^ lblDef, 'blockdata' asPParser, blockDataName optional, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> blockDataSubprogram [
+	^ (blockDataStmt, blockDataBody, endBlockDataStmt)
+	/ (blockDataStmt, endBlockDataStmt)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> body [
 	^ bodyConstruct plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> bodyConstruct [
 	^ specificationPartConstruct / executableConstruct
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> cExpr [
+	^ cPrimary, cPrimaryConcatOp star
+]
+
+{ #category : #rules }
+PPFortranGrammar >> cOperand [
+	^ scon
+	/ nameDataRef
+	/ functionReference
+]
+
+{ #category : #rules }
+PPFortranGrammar >> cPrimary [
+	^ cOperand
+	/ (lpar, cExpr, rpar)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> cPrimaryConcatOp [
+	^ cPrimary, concatOp
+]
+
+{ #category : #rules }
+PPFortranGrammar >> callStmt [
+	^ (lblDef, 'call' asPParser, subroutineNameUse, eos)
+	/ (lblDef, 'call' asPParser, subroutineNameUse, lpar,  subroutineArgList, rpar, eos)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> charLength [
+	^ (lpar, typeParamValue, rpar)
+	/ constant
+]
+
+{ #category : #rules }
+PPFortranGrammar >> closeSpec [
+	^ ('unit=' asPParser, unitIdentifier)
+	/ ('err=' asPParser, lblRef)
+	/ ('status=' asPParser, cExpr)
+	/ ('iostat=' asPParser, scalarVariable)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> closeSpecList [
+	^ unitIdentifierComma optional, (closeSpec, comma) star
+]
+
+{ #category : #rules }
+PPFortranGrammar >> closeStmt [
+	^ lblDef, 'close' asPParser, lpar,  closeSpecList, rpar, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> comBlock [
+	^ ($/ asPParser, spoff, $/ asPParser, spon)
+	/ ($/ asPParser, commonBlockName, $/ asPParser)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> comblock [
 	^ ($/ asPParser, spoff, $/ asPParser,  spon) / ($/ asPParser, commonBlockName, $/ asPParser)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> comlist [
-	^ (comblock optional, commonBlockObject) / 
-	(comlist, comma,  comblock optional, commonBlockObject) /
-	(comlist, comblock, commonBlockObject)
+	^ (comBlock optional, commonBlockObject)
+	/ (comlist, comma, comBlock optional, commonBlockObject)
+	/ (comlist, comBlock, commonBlockObject)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> comma [
 	^ $, asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> commaExpr [
+	^ comma, expr
+]
+
+{ #category : #rules }
 PPFortranGrammar >> commaInputItemList [
 	^ comma, inputItemList
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> commaLoopControl [
 	^ comma optional, loopControl
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> commaSectionSubscript [
 	^ comma, sectionSubscript
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> commentOrNewLine [
-	^ comment / newLine
+	^ comment /	newLine
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> commonBlockObject [
-	^ variableName / arrayDeclarator
+	^ variableName
+	/ arrayDeclarator
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> commonStmt [
 	^ lblDef, 'common' asPParser, comlist, eos
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> computedGotoStmt [
-	^ lblDef, goToKw, lpar, lblRefList, rpar, comma optional, expr, eos
+{ #category : #rules }
+PPFortranGrammar >> complexDataRefTail [
+	^ sectionSubscriptRef
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> computedGotoStmt [
+	^ lblDef, gotoKw lpar,  lblRefList rpar, comma optional, expr, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> concatOpLevel2Expr [
+	^ concatOp, level2Expr
+]
+
+{ #category : #rules }
 PPFortranGrammar >> conditionalBody [
 	^ executionPartConstruct star
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> connectSpec [
+	^ ('unit=' asPParser, unitIdentifier)
+	/ ('err=' asPParser, lblRef)
+	/ ('file=' asPParser, cExpr)
+	/ ('status=' asPParser, cExpr)
+	/ ('access=' asPParser, cExpr)
+	/ ('form=' asPParser, cExpr)
+	/ ('recl=' asPParser, expr)
+	/ ('ulank=' asPParser, cExpr)
+	/ ('iostat=' asPParser, scalarVariable)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> connectSpecList [
+	^ unitIdentifierComma optional, (connectSpec, comma) star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> continueStmt [
 	^ lblDef, 'continue' asPParser, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataIDoObject [
-	^ arrayElement / dataImpliedDo
+	^ arrayElement
+	/ dataImpliedDo
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataIDoObjectList [
 	^ dataIDoObject plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataImpliedDo [
-	^ (lpar, dataIDoObjectList, $, asPParser, impliedDoVariable, $= asPParser, expr, $, asPParser, expr, rpar) /
-	(lpar, dataIDoObjectList, comma, impliedDoVariable, $= asPParser, expr, comma, expr, comma, expr, rpar)
+	^ (lpar,  dataIDoObjectList, comma, impliedDoVariable, $= asPParser, expr, comma, expr, rpar)
+	/ (lpar,  dataIDoObjectList, comma, impliedDoVariable, $= asPParser, expr, comma, expr, comma, expr, rpar)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmt [
 	^ lblDef, 'data' asPParser, datalist, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmtObject [
-	^ variable / dataImpliesdDo
+	^ variable
+	/ dataImpliedDo
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmtObjectList [
 	^ dataStmtObject plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmtSet [
 	^ dataStmtObjectList, $/ asPParser, dataStmtValueList, $/ asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmtValue [
-	^ constant /
-	(constant, $* asPParser, constant) /
-	(namedConstantUse, $* asPParser, constant)
+	^ constant
+	/ (constant, $* asPParser, constant)
+	/ (namedConstantUse, $* asPParser, constant)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dataStmtValueList [
 	^ dataStmtValue plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> datalist [
-	^ dataStmtSet /
-	(datalist optional , comma optional, dataStmtSet)
+	^ dataStmtSet
+	/ (datalist optional, comma optional, dataStmtSet)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> declarationConstruct [
 	^ typeDeclarationStmt / specificationStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> dimensionStmt [
 	^ lblDef, 'dimension' asPParser, arrayDeclaratorList, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> doConstruct [
 	^ labelDoStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> doLabelStmt [
 	^ actionStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> doLblDef [
-	^ tab2, icon, tab9
+	^ tab_2, icon, tab_9
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> doLblRef [
 	^ icon
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> doubleDoStmt [
+	^ 'do' asPParser, lblRef, commaLoopControl, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> editElement [
+	^ fcon
+	/ mislexedFcon
+	/ scon
+	/ hcon
+	/ ident
+	/ (lpar,  fmtSpec, rpar)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> elseConstruct [
-	^ elseStmt, conditionalBody
+	^ elseStmt conditionalBody
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> elseIfConstruct [
-	^ elseIfStmt, conditionalBody
+	^ elseIfStmt conditionalBody
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> elseIfStmt [
-	^ lblDef, ex2, 'elseif' asPParser, lpar, expr, rpar, 'then', eos, in2
+	^ lblDef, ex_2, 'elseif' asPParser, lpar,  expr, rpar, 'then' asPParser, eos, in_2
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> elseStmt [
-	^ lblDef, ex2, 'else' asPParser, eos, in2
+	^ lblDef, ex_2, 'else' asPParser, eos, in_2
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> endBlockDataStmt [
 	^ lblDef, 'end' asPParser, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> endFunctionStmt [
 	^ lblDef, 'end' asPParser, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> endIfStmt [
-	^ lblDef, ex2, 'endif' asPParser, eos
+	^ lblDef, ex_2, 'endif' asPParser, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> endProgramStmt [
-	^ lblDef, 'end', eos
+	^ lblDef, 'end' asPParser, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> endSubroutineStmt [
 	^ lblDef, 'end' asPParser, eos
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> entityDecl [
-	^ objectName /
-	(objectName, lpar, arraySpec, rpar) /
-	(objectName, $* asPParser, charLength) /
-	(objectName , lpar, arraySpec, rpar, $* asPParser, charLength) 
+{ #category : #rules }
+PPFortranGrammar >> endfileStmt [
+	^ (lblDef, 'endfile' asPParser, unitIdentifier, eos)
+	/ (lblDef, 'endfile' asPParser, lpar, positionSpecList, rpar, eos)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> entityDecl [
+	^ objectName
+	/ (objectName, lpar,  arraySpec, rpar)
+	/ (objectName, $* asPParser, charLength)
+	/ (objectName, lpar,  arraySpec, rpar, $* asPParser, charLength)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> entityDeclList [
 	^ entityDecl plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> entryStmt [
-	^ lblDef, 'entry' asPParser, entryName, subroutineParList, 'result' asPParser, lpar, name, rpar, eos
+	^ lblDef, 'entry' asPParser, entryName, subroutineParList, 'result' asPParser, lpar,  name, rpar, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> eos [
 	^ commentOrNewLine, commentOrNewLine star
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> equivalenceObject [
 	^ variable
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> equivalenceObjectList [
 	^ equivalenceObject plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> equivalenceSet [
 	^ lpar, equivalenceObject, comma, equivalenceObjectList, rpar
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> equivalenceSetList [
 	^ equivalenceSet plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> equivalenceStmt [
 	^ lblDef, 'equivalence' asPParser, equivalenceSetList, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> executableConstruct [
-	^ actionStmt / doConstruct / ifConstruct
+	^ actionStmt
+	/ doConstruct
+	/ ifConstruct
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> executableProgram [
 	^ programUnit plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> executauleProgram [
+	^ programUnit plus
+]
+
+{ #category : #rules }
 PPFortranGrammar >> executionPartConstruct [
-	^ executableConstruct / formatStmt / dataStmt / entryStmt 
+	^ executableConstruct
+	/ formatStmt
+	/ dataStmt
+	/ entryStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> explicitShapeSpec [
-	^ (lowerBound, $: asPParser, upperBound) / upperBound
+	^ (lowerBound, $: asPParser, upperBound)
+	/ upperBound
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> explicitShapeSpecList [
 	^ explicitShapeSpec plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> expr [
+	^ level5Expr
+]
+
+{ #category : #rules }
 PPFortranGrammar >> externalNameList [
 	^ externalName plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> externalStmt [
 	^ lblDef, 'external' asPParser, externalNameList, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> fmtSpec [
+	^ formatEdit
+	/ formatSep
+	/ (formatSep, formatEdit)
+	/ (fmtSpec, formatSep)
+	/ (fmtSpec, formatSep, formatEdit)
+	/ (fmtSpec, comma, formatEdit)
+	/ (fmtSpec, comma, formatSep)
+	/ (fmtSpec, comma, formatSep, formatEdit)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> formatEdit [
+	^ editElement
+	/ (icon, editElement)
+	/ xcon
+	/ pcon
+	/ (pcon, editElement)
+	/ (pcon, icon, editElement)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> formatIdentifier [
+	^ lblRef
+	/ cExpr
+	/ $* asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> formatSep [
+	^ $/ asPParser
+	/ $: asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> formatStmt [
+	^ lblDef, 'format' asPParser, lpar,  fmtSpec optional, rpar, eos
+]
+
+{ #category : #rules }
 PPFortranGrammar >> functionPar [
 	^ dummyArgName
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> functionParList [
-	^ (lpar, functionPars, rpar) /
-	epsilon
+	^ (lpar,  functionPars rpar) / epsilon
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> functionPars [
-	^ (functionPar, $, asPParser) star
+	^ (functionPar comma) star
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> functionPrefix [
 	^ 'function' asPParser / 
 	typeSpec,  'function' asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> functionRange [
 	^ functionParList, eos, body optional, endFunctionStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> functionReference [
+	^ name, lpar, rpar
+]
+
+{ #category : #rules }
 PPFortranGrammar >> functionSubprogram [
 	^ lblDef, functionPrefix, functionName, functionRange
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> goToKw [
+{ #category : #rules }
+PPFortranGrammar >> gotoKw [
 	^ 'goto' asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> gotoStmt [
-	^ lblDef, goToKw, lblRef, eos
+	^ lblDef, gotoKw, lblRef, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> iconOrScon [
-	^ icon / scon
+	^ icon
+	/ scon
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> ident [
 	^ id
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> ifConstruct [
-	^ ifThenStmt, conditionalBody, elseIfConstruct optional, elseConstruct optional, endIfStmt
+	^ ifThenStmt, conditionalBody, elseIfConstruct star, elseConstruct optional, endIfStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> ifStmt [
-	^ lblDef, 'if' asPParser, lpar, expr, rpar, actionStmt
+	^ lblDef, 'if' asPParser, lpar,  expr, rpar, actionStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> ifThenStmt [
-	^ lblDef, 'if' asPParser, lpar, expr, rpar, 'then' asPParser, eos, in2
+	^ lblDef, 'if' asPParser, lpar,  expr, rpar, 'then' asPParser, eos, in_2
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> implicitRange [
 	^ ident, $- asPParser, ident
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> implicitRanges [
-	^ (implicitRange, comma) star
+	^ (implicitRange comma) star
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> implicitSpec [
-	^ (typeSpec, implicitRanges) /
-	(typeSpec, lpar, implicitRanges, rpar)
+	^ (typeSpec, implicitRanges)
+	/ (typeSpec, lpar,  implicitRanges, rpar)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> implicitSpecList [
 	^ implicitSpec plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> implicitStmt [
 	^ lblDef, 'implicit' asPParser, implicitSpecList, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> includeStmt [
 	^ 'include' asPParser, scon, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> inputImpliedDo [
+	^ lpar,  inputItemList, comma, impliedDoVariable, $= asPParser, expr, comma, expr, commaExpr optional, rpar
+]
+
+{ #category : #rules }
+PPFortranGrammar >> inputItem [
+	^ nameDataRef
+	/ inputImpliedDo
+]
+
+{ #category : #rules }
+PPFortranGrammar >> inputItemList [
+	^ inputItem plus
+]
+
+{ #category : #rules }
+PPFortranGrammar >> inquireSpec [
+	^ ('unit=' asPParser, unitIdentifier)
+	/ ('file=' asPParser, cExpr)
+	/ ('err=' asPParser, lblRef)
+	/ ('iostat=' asPParser, scalarVariable)
+	/ ('exist=' asPParser, scalarVariable)
+	/ ('opened=' asPParser, scalarVariable)
+	/ ('numuer=' asPParser, scalarVariable)
+	/ ('named=' asPParser, scalarVariable)
+	/ ('name=' asPParser, scalarVariable)
+	/ ('access=' asPParser, scalarVariable)
+	/ ('sequential=' asPParser, scalarVariable)
+	/ ('direct=' asPParser, scalarVariable)
+	/ ('form=' asPParser, scalarVariable)
+	/ ('formatted=' asPParser, scalarVariable)
+	/ ('unformatted=' asPParser, scalarVariable)
+	/ ('recl=' asPParser, expr)
+	/ ('nextrec=' asPParser, scalarVariable)
+	/ ('ulank=' asPParser, scalarVariable)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> inquireSpecList [
+	^ unitIdentifier optional, (inquireSpec, comma) star
+]
+
+{ #category : #rules }
+PPFortranGrammar >> inquireStmt [
+	^ lblDef, 'inquire' asPParser, lpar,  inquireSpecList, rpar, eos
+]
+
+{ #category : #rules }
 PPFortranGrammar >> intrinsicList [
 	^ intrinsicProcedureName plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> intrinsicStmt [
 	^ lblDef, 'intrinsic' asPParser, intrinsicList, eos
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> labelDoStmt [
-	^ lblDef, 'do' asPParser, doLblRef, commaLoopControl, eos, in2, executionPartConstruct star, ex2, doLblDef, doLabelStmt
+{ #category : #rules }
+PPFortranGrammar >> ioControlSpec [
+	^ ('fmt=' asPParser, formatIdentifier)
+	/ ('unit=' asPParser, unitIdentifier)
+	/ ('rec=' asPParser, expr)
+	/ ('end=' asPParser, lblRef)
+	/ ('err=' asPParser, lblRef)
+	/ ('iostat=' asPParser, scalarVariable)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> ioControlSpecList [
+	^ (unitIdentifier, $$ asPParser, comma)
+	/ (unitIdentifier, comma, formatIdentifier)
+	/ (unitIdentifier, comma, ioControlSpec)
+	/ ioControlSpec
+	/ (ioControlSpecList, comma, ioControlSpec)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> labelDoStmt [
+	^ lblDef, 'do' asPParser, doLblRef, commaLoopControl, eos, in_2, executionPartConstruct star, ex_2, doLblDef, doLabelStmt
+]
+
+{ #category : #rules }
 PPFortranGrammar >> lblRef [
 	^ label
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> lblRefList [
 	^ lblRef plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> lengthSelector [
 	^ $* asPParser, charLength
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> level1Expr [
+	^ primary
+]
+
+{ #category : #rules }
+PPFortranGrammar >> level2Expr [
+	^ sign optional, addOperand, addOpAddOperand star
+]
+
+{ #category : #rules }
+PPFortranGrammar >> level3Expr [
+	^ level2Expr, concatOpLevel2Expr star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> loopControl [
 	^ variableName, $= asPParser, expr, comma, expr, commaExpr optional
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> lowerBound [
 	^ expr
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> lpar [
 	^ $( asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> mainProgram [
 	^ programStmt optional, mainRange
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> mainRange [
 	^ body optional, endProgramStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> mislexedFcon [
+	^ (rdcon, spoff, rdcon, spon)
+	/ (ident, spoff, rdcon, spon)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> multOp [
+	^ $* asPParser
+	/ $/ asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> multOpMultOperand [
+	^ multOp, multOperand
+]
+
+{ #category : #rules }
+PPFortranGrammar >> multOperand [
+	^ level1Expr, powerUpMultOperand optional
+]
+
+{ #category : #rules }
+PPFortranGrammar >> nameDataRef [
+	^ name, complexDataRefTail star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> namedConstant [
 	^ ident
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> namedConstantDef [
 	^ namedConstant, $= asPParser, expr
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> namedConstantDefList [
-	^ namedConstantDef plus
+	^ namedConstantDef optional
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> namedConstantUse [
 	^ ident
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> parameterStmt [
-	^ lblDef, 'parameter' asPParser, lpar, namedConstantDefList, rpar, eos
+{ #category : #rules }
+PPFortranGrammar >> openStmt [
+	^ lblDef, 'open' asPParser, lpar,  connectSpecList, rpar, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> outputImpliedDo [
+	^ (lpar,  expr, comma, impliedDoVariable, $= asPParser, expr, comma, expr, commaExpr optional, rpar)
+	/ (lpar,  outputItemList1, comma, impliedDoVariable, $= asPParser, expr, comma, expr, commaExpr optional, rpar)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> outputItemList [
+	^ expr
+	/ outputItemList1
+]
+
+{ #category : #rules }
+PPFortranGrammar >> outputItemList1 [
+	^ (expr, comma, expr)
+	/ (expr, comma, outputImpliedDo)
+	/ outputImpliedDo
+	/ (outputItemList1, comma, expr)
+	/ (outputItemList1, comma, outputImpliedDo)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> parameterStmt [
+	^ lblDef, 'parameter' asPParser, lpar,  namedConstantDefList, rpar, eos
+]
+
+{ #category : #rules }
 PPFortranGrammar >> pauseStmt [
 	^ lblDef, 'pause' asPParser, iconOrScon optional, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> positionSpec [
+	^ ('unit=' asPParser, unitIdentifier)
+	/ ('err=' asPParser, lblRef)
+	/ ('iostat=' asPParser, scalarVariable)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> positionSpecList [
+	^ unitIdentifierComma optional, positionSpec plus
+]
+
+{ #category : #rules }
+PPFortranGrammar >> powerOp [
+	^ '**' asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> powerUpMultOperand [
+	^ powerOp, multOperand
+]
+
+{ #category : #rules }
+PPFortranGrammar >> primary [
+	^ unsignedArithmeticConstant
+	/ nameDataRef
+	/ functionReference
+	/ (lpar, expr, rpar)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> printStmt [
+	^ (lblDef, 'print' asPParser, formatIdentifier, comma, outputItemList, eos)
+	/ (lblDef, 'print' asPParser, formatIdentifier, eos)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> program [
-	^ in6, commentOrNewLine star, executableProgram, commentOrNewLine star, ex6
+	^ in_6, commentOrNewLine star, executableProgram, commentOrNewLine star, ex_6
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> programStmt [
-	^ lblDef,  'program' asPParser,  programName, eos
+	^ lblDef, 'program' asPParser, programName, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> programUnit [
-	^ mainProgram / functionSubProgram / subroutineSubProgram / blockDataSubProgram
+	^ mainProgram / functionSubprogram / subroutineSubprogram / blockDataSubprogram
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> rdCtlSpec [
-	^ rdUnitId / (lpar, rdIoCtlSpecList rpar)
+	^ rdUnitId
+	/ (lpar,  rdIoCtlSpecList, rpar)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> rdFmtId [
+	^ lblRef
+	/ $* asPParser
+	/ cOperand
+	/ (cOperand, concatOp, cPrimary)
+	/ (rdFmtIdExpr, concatOp, cPrimary)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> rdFmtIdExpr [
+	^ lpar,  uFExpr, rpar
+]
+
+{ #category : #rules }
+PPFortranGrammar >> rdIoCtlSpecList [
+	^ (unitIdentifier, comma, ioControlSpec)
+	/ (unitIdentifier, comma, formatIdentifier)
+	/ ioControlSpec
+	/ (rdIoCtlSpecList, comma, ioControlSpec)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> rdUnitId [
-	^ (lpar, uFExpr, rpar) / (lpar, $* asPParser, rpar)
+	^ (lpar,  uFExpr, rpar)
+	/ (lpar,  $* asPParser, rpar)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> readStmt [
 	^ (lblDef, 'read' asPParser, rdCtlSpec, inputItemList optional, eos) /
 	(lblDef, 'read' asPParser, rdFmtId, commaInputItemList optional, eos)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> returnStmt [
+	^ lblDef, 'return' asPParser, expr optional, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> rewindStmt [
+	^ (lblDef, 'rewind' asPParser, unitIdentifier, eos)
+	/ (lblDef, 'rewind' asPParser, lpar, positionSpecList, rpar, eos)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> rpar [
 	^ $) asPParser
 ]
 
-{ #category : #accessing }
-PPFortranGrammar >> saveStmt [
-	^ (lblDef, 'save' asPParser, eos) /
-	(lblDef, 'save' asPParser, savedEntityList, eos)
+{ #category : #rules }
+PPFortranGrammar >> sFExprList [
+	^ (expr, $: asPParser optional, expr optional)
+	/ ($: asPParser, expr optional)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> saveStmt [
+	^ (lblDef, 'save' asPParser, eos)
+	/ (lblDef, 'save' asPParser, savedEntityList, eos)
+]
+
+{ #category : #rules }
 PPFortranGrammar >> savedCommonBlock [
 	^ $/ asPParser, commonBlockName, $/ asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> savedEntity [
-	^ variableName / savedCommonBlock
+	^ variableName
+	/ savedCommonBlock
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> savedEntityList [
 	^ savedEntity plus
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> sectionSubscript [
+	^ (expr, subscriptTripletTail optional)
+	/ subscriptTripletTail
+]
+
+{ #category : #rules }
+PPFortranGrammar >> sectionSubscriptList [
+	^ sectionSubscript plus
+]
+
+{ #category : #rules }
+PPFortranGrammar >> sectionSubscriptRef [
+	^ lpar, sectionSubscriptList, rpar
+]
+
+{ #category : #rules }
+PPFortranGrammar >> sfDummyArgNameList [
+	^ sfDummyArgName plus
+]
+
+{ #category : #rules }
 PPFortranGrammar >> sfExprList [
 	^ (expr, $: asPParser optional, expr optional) / ($: asPParser, expr optional)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> sfExprListRef [
-	^ lpar, sfExprList, commaSectionSubscript star, rpar
+	^ lpar,  sfExprList, commaSectionSubscript star, rpar
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> sign [
+	^ $+ asPParser
+	/ $- asPParser
+]
+
+{ #category : #rules }
 PPFortranGrammar >> specificaitonStmt [
 	^ comonStmt / dataStmt / dimensionStmt / equivalenceStmt / externalStmt / intrinsicStmt / saveStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> specificationPartConstruct [
-	^ implicitStmt / parameterStmt / formatStmt / entryStmt / declarationConstruct / includeStmt
+	^ implicitStmt / parameterStmt/ formatStmt/ entryStmt/ declarationConstruct/ includeStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> specificationStmt [
+	^ commonStmt
+	/ dataStmt
+	/ dimensionStmt
+	/ equivalenceStmt
+	/ externalStmt
+	/ intrinsicStmt
+	/ saveStmt
+]
+
+{ #category : #rules }
 PPFortranGrammar >> start [
 	"Answer the production to start this parser with."
 	
-	^ ident end
+	^ programUnit end
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> stmtFunctionRange [
+	^ lpar, sfDummyArgNameList optional, rpar, $= asPParser, expr, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> stmtFunctionStmt [
+	^ lblDef, name, stmtFunctionRange
+]
+
+{ #category : #rules }
 PPFortranGrammar >> stopStmt [
 	^ lblDef, 'stop' asPParser, iconOrScon optional, eos
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> subroutineArg [
+	^ expr
+	/ hcon
+	/ ($* asPParser, lblRef)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> subroutineArgList [
+	^ (subroutineArg, comma) star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> subroutinePar [
-	^ dummyArgName / $* asPParser
+	^ dummyArgName
+	/ ($* asPParser)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> subroutineParList [
-	^ (lpar, subroutinePars, rpar) / epsilon
+	^ (lpar,  subroutinePars, rpar) / epsilon 
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> subroutinePars [
-	^ (subroutinePar, $, asPParser) star
+	^ (subroutinePar comma) star
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> subroutineRange [
 	^ subroutineParList, eos, body optional, endSubroutineStmt
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> subroutineSubprogram [
-	^ lblDef , 'subroutine' asPParser, subroutineName, subroutineRange
+	^ lblDef, 'subroutine' asPParser, subroutineName, subroutineRange
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> typeDeclarationStmt [
+	^ lblDef, typeSpec, entityDeclList, eos
+]
+
+{ #category : #rules }
 PPFortranGrammar >> typeParamValue [
-	^ expr / $* asPParser 
+	^ expr
+	/ $* asPParser
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> typeSpec [
-	^ 'integer' asPParser /
-	'real' asPParser /
-	'doubleprecision' asPParser /
-	'complex' asPParser /
-	'logical' asPParser /
-	'character' asPParser /
-	('character', lengthSelector)
+	^ 'integer' asPParser
+	/ 'real' asPParser
+	/ 'doubleprecision' asPParser
+	/ 'complex' asPParser
+	/ 'logical' asPParser
+	/ 'character' asPParser
+	/ ('character' asPParser lengthSelector)
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
+PPFortranGrammar >> uFExpr [
+	^ uFTerm
+	/ (sign, uFTerm)
+	/ (uFExpr, addOp, uFTerm)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> uFFactor [
+	^ uFPrimary
+	/ (uFPrimary, powerOp, uFFactor)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> uFPrimary [
+	^ icon
+	/ scon
+	/ nameDataRef
+	/ functionReference
+	/ (lpar,  uFExpr, rpar)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> uFTerm [
+	^ uFFactor
+	/ (uFTerm, multOp, uFFactor)
+	/ (uFTerm, concatOp, uFPrimary)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> unitIdentifier [
+	^ uFExpr
+	/ $* asPParser
+]
+
+{ #category : #rules }
+PPFortranGrammar >> unitIdentifierComma [
+	^ unitIdentifier, comma
+]
+
+{ #category : #rules }
 PPFortranGrammar >> upperBound [
 	^ expr
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> variableComma [
 	^ variableName, comma
 ]
 
-{ #category : #accessing }
+{ #category : #rules }
 PPFortranGrammar >> writeStmt [
 	^ lblDef, 'write' asPParser, lpar, ioControlSpecList, rpar, outputItemList optional, eos
 ]
