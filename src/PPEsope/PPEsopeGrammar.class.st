@@ -2,11 +2,9 @@ Class {
 	#name : #PPEsopeGrammar,
 	#superclass : #PP2CompositeNode,
 	#instVars : [
-		'carriageReturn',
 		'file',
 		'include',
 		'includeName',
-		'lineStart',
 		'pointer',
 		'pointerName',
 		'segact',
@@ -18,11 +16,12 @@ Class {
 		'segsup',
 		'spaces',
 		'unknownLine',
-		'lineEnd',
 		'notEndLine',
 		'lines',
 		'identifier',
-		'comma'
+		'comma',
+		'endOfLine',
+		'beginOfLine'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -33,8 +32,8 @@ PPEsopeGrammar class >> getSourceFromFile: filename [
 ]
 
 { #category : #accessing }
-PPEsopeGrammar >> carriageReturn [
-	^ Character cr asPParser
+PPEsopeGrammar >> beginOfLine [
+	^ '      ' asPParser token
 ]
 
 { #category : #accessing }
@@ -43,8 +42,13 @@ PPEsopeGrammar >> comma [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> endOfLine [
+	^ (Character cr asPParser / Character lf asPParser)  plus
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segdef / segini / segact / segadj / segdes / segsup / pointer / unknownLine) plus
+	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / unknownLine) plus
 ]
 
 { #category : #accessing }
@@ -54,22 +58,12 @@ PPEsopeGrammar >> identifier [
 
 { #category : #accessing }
 PPEsopeGrammar >> include [
-	^ '#include' asPParser, spaces, includeName, lineEnd
+	^ '#include' asPParser, spaces, includeName, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> includeName [
 	^ ($" asPParser / $< asPParser), (identifier, $. asPParser, identifier) token, ($" asPParser  / $>  asPParser)
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> lineEnd [
-	^ carriageReturn plus
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> lineStart [
-	^ '      ' asPParser token
 ]
 
 { #category : #accessing }
@@ -79,12 +73,12 @@ PPEsopeGrammar >> lines [
 
 { #category : #accessing }
 PPEsopeGrammar >> notEndLine [
-	^ (lineStart, 'end' asPParser not, carriageReturn negate plus) token, carriageReturn
+	^ beginOfLine, 'end' asPParser not, endOfLine negate plus, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> pointer [
-	^ lineStart, 'pointeur' asPParser, spaces, pointerName, lineEnd
+	^ beginOfLine, 'pointeur' asPParser, spaces, pointerName, endOfLine
 ]
 
 { #category : #accessing }
@@ -99,30 +93,30 @@ PPEsopeGrammar >> rpar [
 
 { #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ lineStart, 'segact' asPParser, spaces , comma, spaces, segname, lineEnd
+	^ beginOfLine, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segadj [
-	^ lineStart, 'segadj' asPParser, spaces , comma, spaces, segname, lineEnd
+	^ beginOfLine, 'segadj' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdef [
 
-	^ lineStart, 'segment' asPParser, spaces, comma, segname, lineEnd,
+	^ beginOfLine, ('segment' asPParser, spaces, comma, segname) token, endOfLine,
 	lines,
-	lineStart, 'end' asPParser , spaces, 'segment' asPParser, lineEnd
+	beginOfLine, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ lineStart, 'segdes' asPParser token, spaces , comma, spaces, segname, lineEnd
+	^ beginOfLine, 'segdes' asPParser token, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ lineStart, 'segini' asPParser, spaces , comma, spaces, segname, lineEnd
+	^ beginOfLine, 'segini' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
@@ -132,7 +126,7 @@ PPEsopeGrammar >> segname [
 
 { #category : #accessing }
 PPEsopeGrammar >> segsup [
-	^ lineStart , 'segsup' asPParser, spaces , comma, spaces, segname, lineEnd
+	^ beginOfLine , 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
@@ -147,5 +141,5 @@ PPEsopeGrammar >> start [
 
 { #category : #accessing }
 PPEsopeGrammar >> unknownLine [
-	^ (carriageReturn negate plus) token, carriageReturn
+	^ (endOfLine negate plus) token optional, endOfLine
 ]
