@@ -12,17 +12,17 @@ PPEsopeRewriter class >> ignoredNames [
 	^ super ignoredNames , #(stream)
 ]
 
+{ #category : #utilities }
+PPEsopeRewriter >> copyLine: nodes from: start to: end [
+	start to: end do: [ :i | stream << (nodes at: i) value ]
+]
+
 { #category : #accessing }
 PPEsopeRewriter >> endOfLine [
 	"(Character cr asPParser / Character lf asPParser)  plus"
 	
 	^ super endOfLine
 	==> [ :nodes | String streamContents: [ :str | nodes do: [ :c | str nextPut: c ] ] ]
-]
-
-{ #category : #utilities }
-PPEsopeRewriter >> esopeLine: nodes [
-	2 to: nodes size do: [ :i | stream << (nodes at: i) value ]
 ]
 
 { #category : #initialization }
@@ -37,16 +37,6 @@ PPEsopeRewriter >> initialize [
 	self initStream.
 ]
 
-{ #category : #utilities }
-PPEsopeRewriter >> insideSegment: anOrderedCollection [
-	anOrderedCollection do: [ :line |
-			stream << 'cESO  ';
-					 << line second;
-					 << line third;
-					 << line fourth.
-		 ]
-]
-
 { #category : #accessing }
 PPEsopeRewriter >> output [
 	^ stream contents.
@@ -54,80 +44,86 @@ PPEsopeRewriter >> output [
 
 { #category : #rules }
 PPEsopeRewriter >> pointer [
-	" beginOfLine, 'pointeur' asPParser, spaces, pointerName, endOfLine"
+	" beginOfLine, spaces, 'pointeur' asPParser, spaces, pointerName, endOfLine"
 
 	^ super pointer
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
+]
+
+{ #category : #utilities }
+PPEsopeRewriter >> processLinesInsideSegment: anOrderedCollection [
+	"  (beginOfLine, 'end' asPParser not, endOfLine negate plus, endOfLine) star"
+	anOrderedCollection do: [ :line |
+			stream << 'cESO  '.
+			self copyLine: line from: 3 to: 4
+		 ]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segact [
-	" beginOfLine, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine, spaces, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
 
 	^ super segact
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segadj [
-	" beginOfLine, 'segadj' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine, spaces, 'segadj' asPParser, spaces , comma, spaces, segname, endOfLine"
 
 	^ super segadj
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segdef [
-	" beginOfLine, ('segment' asPParser, spaces, comma, segname) token, endOfLine,
+	" beginOfLine, spaces, ('segment' asPParser, spaces, comma, segname) token, endOfLine,
 	lines,
-	beginOfLine, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine"
+	beginOfLine, spaces, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine"
 	
 	^ super segdef
-	==> [ :nodes | 1halt.
-		stream << 'cESO  ';
-				 << nodes second value;
-				 << nodes third value.
-		self insideSegment: nodes fourth.
-		stream << 'cESO  ';
-				 << nodes fifth value;
-				 << nodes sixth value;
-			    << nodes seventh value.
+	==> [ :nodes |
+		stream << 'cESO  '.
+		self copyLine: nodes from: 2 to: 4.
+		self processLinesInsideSegment: nodes fifth.
+		stream << 'cESO  '.
+		self copyLine: nodes from: 7  to: 9
 		]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segdes [
-	" beginOfLine, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine, spaces, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
 
 	^ super segdes
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segini [
-	" beginOfLine , 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine , spaces, 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine"
 
 	^ super segini
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segsup [
-	" beginOfLine, 'pointeur' asPParser, spaces, pointerName, endOfLine"
+	" beginOfLine, spaces, 'pointeur' asPParser, spaces, pointerName, endOfLine"
 
 	^ super segsup
 		==> [ :nodes | stream << 'cESO  '.
-				self esopeLine: nodes
+				self copyLine: nodes from: 2 to: nodes size
 			]
 ]
 
@@ -137,5 +133,5 @@ PPEsopeRewriter >> unknownLine [
 	
 	^ super unknownLine
 	==> [ :nodes |
-			nodes do: [ :node | stream << node value ] ]
+			self copyLine: nodes from: 1 to: nodes size ]
 ]

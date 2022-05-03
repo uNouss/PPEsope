@@ -48,7 +48,7 @@ PPEsopeGrammar >> endOfLine [
 
 { #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / unknownLine) plus
+	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / include / unknownLine) plus
 ]
 
 { #category : #accessing }
@@ -93,40 +93,41 @@ PPEsopeGrammar >> rpar [
 
 { #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ beginOfLine, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segact' asPParser, (#space asPParser / comma), spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segadj [
-	^ beginOfLine, 'segadj' asPParser, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segadj' asPParser, (#space asPParser / comma), spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdef [
 
-	^ beginOfLine, ('segment' asPParser, spaces, comma, segname) token, endOfLine,
+	^ beginOfLine, spaces, ('segment' asPParser, (#space asPParser / comma), segname) token, endOfLine,
 	lines,
-	beginOfLine, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine
+	beginOfLine, spaces, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ beginOfLine, 'segdes' asPParser token, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segdes' asPParser token, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ beginOfLine, 'segini' asPParser, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segini' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segname [
-	^ #letter asPParser plus token
+	self flag: #FIXME. " revoir la grammaire sur segname et faire passer les tests"
+	^ identifier token
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segsup [
-	^ beginOfLine , 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine , spaces, 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine
 ]
 
 { #category : #accessing }
