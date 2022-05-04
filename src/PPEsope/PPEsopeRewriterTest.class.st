@@ -36,10 +36,35 @@ PPEsopeRewriterTest >> setUp [
 ]
 
 { #category : #accessing }
-PPEsopeRewriterTest >> testBigFile [
-	self parse: self class esopeBigFile rule: #file.
-	1halt.
-	self assert: parser output equals: self class esopeBigFileProcessed.
+PPEsopeRewriterTest >> testFortranLine [
+	| sourcecode |
+	sourcecode := '      subroutine test(brr)
+'.
+	self parse: sourcecode rule: #fortranLine.
+
+	self assert: parser output equals: sourcecode
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testFortranLineEsoAt [
+	self parse: '      rlist.ilist=0
+' rule: #fortranLine.
+	self assert: parser output equals: '      ESOat(rlist,ilist)=0
+'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testFortranLineEsoSlash [
+	self
+		parse:
+			'        lxs=xs.cstg(/1)
+'
+		rule: #fortranLine.
+	self
+		assert: parser output
+		equals:
+			'        lxs=ESOsl(ESOat(xs,cstg),1)
+'
 ]
 
 { #category : #accessing }
@@ -128,15 +153,87 @@ PPEsopeRewriterTest >> testSegsup [
 { #category : #accessing }
 PPEsopeRewriterTest >> testSmallFile [
 	self parse: self class esopeSmallFile rule: #file.
-	self assert: parser output equals: self class esopeSmallFileProcessed.
+	self assert: parser output equals: self class esopeSmallFileProcessed
 ]
 
 { #category : #accessing }
-PPEsopeRewriterTest >> testUnknownLine [
-	| sourcecode |
-	sourcecode := '      subroutine test(brr)
-'.
-	self parse: sourcecode rule: #unknownLine.
+PPEsopeRewriterTest >> testTranslateEsopeArray [
+	self
+		assert:
+			(parser translateEsopeAt: (parser translateEsopeArray: 'ab.cd(ef)'))
+		equals: 'ESOar(ESOat(ab,cd),ef)'
+]
 
-	self assert: parser output equals: sourcecode
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeArrayDotInsidePar [
+	self
+		assert: (parser translateEsopeAt: (parser translateEsopeArray: 'rlist.elist(rlist.ilist)=ms'))
+		equals: 'ESOar(ESOat(rlist,elist),ESOat(rlist,ilist))=ms'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeAtBinaryOperator [
+	self
+		assert: (parser translateEsopeAt: '         if(lxs.eq.0)then')
+		equals: '         if(lxs.eq.0)then'.
+	self
+		assert:
+			(parser
+				translateEsopeAt: '              if((rlist.ilist).gt.nlist)then')
+		equals: '              if((ESOat(rlist,ilist)).gt.nlist)then'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeAtEqOperator [
+	self assert: (parser translateEsopeAt: '         if(lxs.eq.0)then') equals: '         if(lxs.eq.0)then'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeAtNoDot [
+	self assert: (parser translateEsopeAt: 'abc') equals: 'abc'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeAtOneDot [
+	self
+		assert: (parser translateEsopeAt: 'abc.def')
+		equals: 'ESOat(abc,def)'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeAtTwoDots [
+	self
+		assert: (parser translateEsopeAt: 'abc.def=opq.xyz')
+		equals: 'ESOat(abc,def)=ESOat(opq,xyz)'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeSlashEsopeAt [
+	self
+		assert:
+			(parser
+				translateEsopeAt: (parser translateEsopeSlash: 'abc.def(/1)'))
+	
+		equals: 'ESOsl(ESOat(abc,def),1)'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeSlashNone [
+	self
+		assert: (parser translateEsopeSlash: 'abc.def')
+		equals: 'abc.def'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeSlashOne [
+	self
+		assert: (parser translateEsopeSlash: 'abc.def(/1)')
+		equals: 'ESOsl(abc.def,1)'
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeSlashSlash [
+	self
+		assert: (parser translateEsopeAt: 'C     //fin repeter "decouper chaque chaine"')
+		equals: 'C     //fin repeter "decouper chaque chaine"'
 ]

@@ -255,7 +255,13 @@ Class {
 		'uFPrimary',
 		'cPrimaryConcatOp',
 		'level2Expr',
-		'concatOpLevel2Expr'
+		'concatOpLevel2Expr',
+		'notOp',
+		'level4Expr',
+		'sp',
+		'relOp',
+		'level3Expr',
+		'relOpLevel3Expr'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -303,6 +309,16 @@ PPFortranGrammar >> addOperand [
 ]
 
 { #category : #rules }
+PPFortranGrammar >> andOp [
+	^ sp, '.and.' asPParser, sp
+]
+
+{ #category : #rules }
+PPFortranGrammar >> andOperand [
+	^ notOp optional, level4Expr
+]
+
+{ #category : #rules }
 PPFortranGrammar >> arithmeticIfStmt [
 	^ lblDef, 'if' asPParser, lpar,  expr, rpar, lblRef, comma, lblRef, comma, lblRef, eos
 ]
@@ -315,6 +331,11 @@ PPFortranGrammar >> arrayDeclarator [
 { #category : #rules }
 PPFortranGrammar >> arrayDeclaratorList [
 	^ arrayDeclarator plus
+]
+
+{ #category : #rules }
+PPFortranGrammar >> arrayElement [
+	^ variableName, lpar,  sectionSubscriptList, rpar
 ]
 
 { #category : #rules }
@@ -506,6 +527,11 @@ PPFortranGrammar >> complexDataRefTail [
 { #category : #rules }
 PPFortranGrammar >> computedGotoStmt [
 	^ lblDef, gotoKw lpar,  lblRefList rpar, comma optional, expr, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> concatOp [
+	^ $/ asPParser, spoff, $/ asPParser, spon
 ]
 
 { #category : #rules }
@@ -714,6 +740,12 @@ PPFortranGrammar >> entryStmt [
 { #category : #rules }
 PPFortranGrammar >> eos [
 	^ commentOrNewLine, commentOrNewLine star
+]
+
+{ #category : #rules }
+PPFortranGrammar >> equivOp [
+	^ sp, '.eqv.' asPParser, sp
+	/ sp, '.neqv.' asPParser, sp
 ]
 
 { #category : #rules }
@@ -1048,6 +1080,11 @@ PPFortranGrammar >> level3Expr [
 ]
 
 { #category : #rules }
+PPFortranGrammar >> level4Expr [
+	^ level3Expr, relOpLevel3Expr star
+]
+
+{ #category : #rules }
 PPFortranGrammar >> loopControl [
 	^ variableName, $= asPParser, expr, comma, expr, commaExpr optional
 ]
@@ -1120,8 +1157,18 @@ PPFortranGrammar >> namedConstantUse [
 ]
 
 { #category : #rules }
+PPFortranGrammar >> notOp [
+	^ sp, '.not.' asPParser, sp
+]
+
+{ #category : #rules }
 PPFortranGrammar >> openStmt [
 	^ lblDef, 'open' asPParser, lpar,  connectSpecList, rpar, eos
+]
+
+{ #category : #rules }
+PPFortranGrammar >> orOp [
+	^ sp, '.or.' asPParser, sp
 ]
 
 { #category : #rules }
@@ -1244,6 +1291,21 @@ PPFortranGrammar >> rdUnitId [
 PPFortranGrammar >> readStmt [
 	^ (lblDef, 'read' asPParser, rdCtlSpec, inputItemList optional, eos) /
 	(lblDef, 'read' asPParser, rdFmtId, commaInputItemList optional, eos)
+]
+
+{ #category : #rules }
+PPFortranGrammar >> relOp [
+	^ sp, '.eq.' asPParser, sp
+	/ sp, '.ne.' asPParser, sp
+	/ sp, '.lt.' asPParser, sp
+	/ sp, '.le.' asPParser, sp
+	/ sp, '.gt.' asPParser, sp
+	/ sp, '.ge.' asPParser, sp
+]
+
+{ #category : #rules }
+PPFortranGrammar >> relOpLevel3Expr [
+	^ relOp, level3Expr
 ]
 
 { #category : #rules }
@@ -1406,6 +1468,16 @@ PPFortranGrammar >> subroutineRange [
 { #category : #rules }
 PPFortranGrammar >> subroutineSubprogram [
 	^ lblDef, 'subroutine' asPParser, subroutineName, subroutineRange
+]
+
+{ #category : #rules }
+PPFortranGrammar >> subscriptTripletTail [
+	^ $: asPParser, expr optional
+]
+
+{ #category : #rules }
+PPFortranGrammar >> substringRange [
+	^ lpar,  expr optional, subscriptTripletTail, rpar
 ]
 
 { #category : #rules }

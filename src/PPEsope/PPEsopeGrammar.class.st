@@ -12,16 +12,16 @@ Class {
 		'segdef',
 		'segdes',
 		'segini',
-		'segname',
 		'segsup',
 		'spaces',
-		'unknownLine',
 		'notEndLine',
 		'lines',
 		'identifier',
 		'comma',
 		'endOfLine',
-		'beginOfLine'
+		'beginOfLine',
+		'segIdentifier',
+		'fortranLine'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -48,7 +48,12 @@ PPEsopeGrammar >> endOfLine [
 
 { #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / include / unknownLine) plus
+	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / include / fortranLine) plus
+]
+
+{ #category : #accessing }
+PPEsopeGrammar >> fortranLine [
+	^ (endOfLine negate plus) token optional, endOfLine
 ]
 
 { #category : #accessing }
@@ -83,7 +88,7 @@ PPEsopeGrammar >> pointer [
 
 { #category : #accessing }
 PPEsopeGrammar >> pointerName [
-	^ (identifier, $. asPParser, identifier) token
+	^ identifier, $. asPParser, identifier
 ]
 
 { #category : #accessing }
@@ -92,42 +97,41 @@ PPEsopeGrammar >> rpar [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> segIdentifier [
+	^ endOfLine negate plus
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> segact [
-	^ beginOfLine, spaces, 'segact' asPParser, (#space asPParser / comma), spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segact' asPParser, segIdentifier, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segadj [
-	^ beginOfLine, spaces, 'segadj' asPParser, (#space asPParser / comma), spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segadj' asPParser, segIdentifier, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdef [
 
-	^ beginOfLine, spaces, ('segment' asPParser, (#space asPParser / comma), segname) token, endOfLine,
+	^ beginOfLine, spaces, 'segment' asPParser, segIdentifier, endOfLine,
 	lines,
-	beginOfLine, spaces, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine
+	beginOfLine, spaces, 'end' asPParser , spaces, 'segment' asPParser, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segdes [
-	^ beginOfLine, spaces, 'segdes' asPParser token, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine, spaces, 'segdes' asPParser, segIdentifier, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segini [
-	^ beginOfLine, spaces, 'segini' asPParser, spaces , comma, spaces, segname, endOfLine
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> segname [
-	self flag: #FIXME. " revoir la grammaire sur segname et faire passer les tests"
-	^ identifier token
+	^ beginOfLine, spaces, 'segini' asPParser, segIdentifier, endOfLine
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> segsup [
-	^ beginOfLine , spaces, 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine
+	^ beginOfLine , spaces, 'segsup' asPParser, segIdentifier, endOfLine
 ]
 
 { #category : #accessing }
@@ -138,9 +142,4 @@ PPEsopeGrammar >> spaces [
 { #category : #accessing }
 PPEsopeGrammar >> start [
 	^ file end
-]
-
-{ #category : #accessing }
-PPEsopeGrammar >> unknownLine [
-	^ (endOfLine negate plus) token optional, endOfLine
 ]

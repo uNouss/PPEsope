@@ -12,6 +12,11 @@ PPEsopeRewriter class >> ignoredNames [
 	^ super ignoredNames , #(stream)
 ]
 
+{ #category : #regex }
+PPEsopeRewriter class >> regexForEsopeWithArray [
+	^ '([a-zA-Z0-9]+\.[a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
+]
+
 { #category : #utilities }
 PPEsopeRewriter >> copyLine: nodes from: start to: end [
 	start to: end do: [ :i | stream << (nodes at: i) value ]
@@ -23,6 +28,49 @@ PPEsopeRewriter >> endOfLine [
 	
 	^ super endOfLine
 	==> [ :nodes | String streamContents: [ :str | nodes do: [ :c | str nextPut: c ] ] ]
+]
+
+{ #category : #rules }
+PPEsopeRewriter >> fortranLine [
+	"(lineEnd negate plus) token optional, lineEnd"
+
+	^ super fortranLine
+		==> [ :nodes | 
+			stream
+				<<
+					(self
+						translateEsopeAt:
+							(self translateEsopeArray: (self
+								translateEsopeSlash:
+									(''
+										writeStreamDo: [ :str | 
+											1 to: nodes size do: [ :i | str << (nodes at: i) value ].
+											str contents ])))) ]
+]
+
+{ #category : #rules }
+PPEsopeRewriter >> fortranOperator: esopeAtIdentifier [ 
+	| uppercaseIdentifier |
+	uppercaseIdentifier := esopeAtIdentifier asUppercase.
+	^ #('.EQ.' '.LT.' '.LE.' '.GT.' '.GE.' '.NE.' '.OR.' '.AND.' '.NOT.' '.TRUE.' '.FALSE.' '.EQV.' '.NEQV.')
+		anySatisfy: [ :operator | 
+			(uppercaseIdentifier beginsWith: operator)
+				or: [ uppercaseIdentifier endsWith: operator ] ]
+]
+
+{ #category : #rules }
+PPEsopeRewriter >> fortranOperator: esopeAtIdentifier from: start to: end [
+	| uppercaseIdentifier |
+	start <= 1
+		ifTrue: [ ^ false ].
+	end >= esopeAtIdentifier size
+		ifTrue: [ ^ false ].
+
+	uppercaseIdentifier := (esopeAtIdentifier copyFrom: start -1 to: end + 1) asUppercase.
+	^ #('.EQ.' '.LT.' '.LE.' '.GT.' '.GE.' '.NE.' '.OR.' '.AND.' '.NOT.' '.TRUE.' '.FALSE.' '.EQV.' '.NEQV.')
+		anySatisfy: [ :operator | 
+			(uppercaseIdentifier beginsWith: operator)
+				or: [ uppercaseIdentifier endsWith: operator ] ]
 ]
 
 { #category : #initialization }
@@ -63,7 +111,7 @@ PPEsopeRewriter >> processLinesInsideSegment: anOrderedCollection [
 
 { #category : #rules }
 PPEsopeRewriter >> segact [
-	" beginOfLine, spaces, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
+	"beginOfLine, spaces, 'segact' asPParser, segIdentifier, endOfLine"
 
 	^ super segact
 		==> [ :nodes | stream << 'cESO  '.
@@ -73,7 +121,7 @@ PPEsopeRewriter >> segact [
 
 { #category : #rules }
 PPEsopeRewriter >> segadj [
-	" beginOfLine, spaces, 'segadj' asPParser, spaces , comma, spaces, segname, endOfLine"
+	"beginOfLine, spaces, 'segadj' asPParser, segIdentifier, endOfLine"
 
 	^ super segadj
 		==> [ :nodes | stream << 'cESO  '.
@@ -83,23 +131,23 @@ PPEsopeRewriter >> segadj [
 
 { #category : #rules }
 PPEsopeRewriter >> segdef [
-	" beginOfLine, spaces, ('segment' asPParser, spaces, comma, segname) token, endOfLine,
+	"beginOfLine, spaces, 'segment' asPParser, segIdentifier, endOfLine,
 	lines,
-	beginOfLine, spaces, ('end' asPParser , spaces, 'segment' asPParser) token, endOfLine"
+	beginOfLine, spaces, 'end' asPParser , spaces, 'segment' asPParser, endOfLine"
 	
 	^ super segdef
 	==> [ :nodes |
 		stream << 'cESO  '.
-		self copyLine: nodes from: 2 to: 4.
-		self processLinesInsideSegment: nodes fifth.
+		self copyLine: nodes from: 2 to: 5.
+		self processLinesInsideSegment: (nodes at: 6).
 		stream << 'cESO  '.
-		self copyLine: nodes from: 7  to: 9
+		self copyLine: nodes from: 8  to: 12
 		]
 ]
 
 { #category : #rules }
 PPEsopeRewriter >> segdes [
-	" beginOfLine, spaces, 'segact' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine, spaces, 'segdes' asPParser, segIdentifier, endOfLine"
 
 	^ super segdes
 		==> [ :nodes | stream << 'cESO  '.
@@ -109,7 +157,7 @@ PPEsopeRewriter >> segdes [
 
 { #category : #rules }
 PPEsopeRewriter >> segini [
-	" beginOfLine , spaces, 'segsup' asPParser, spaces , comma, spaces, segname, endOfLine"
+	" beginOfLine, spaces, 'segini' asPParser, segIdentifier, endOfLine"
 
 	^ super segini
 		==> [ :nodes | stream << 'cESO  '.
@@ -119,7 +167,7 @@ PPEsopeRewriter >> segini [
 
 { #category : #rules }
 PPEsopeRewriter >> segsup [
-	" beginOfLine, spaces, 'pointeur' asPParser, spaces, pointerName, endOfLine"
+	" beginOfLine , spaces, 'segsup' asPParser, segIdentifier, endOfLine"
 
 	^ super segsup
 		==> [ :nodes | stream << 'cESO  '.
@@ -128,10 +176,79 @@ PPEsopeRewriter >> segsup [
 ]
 
 { #category : #rules }
-PPEsopeRewriter >> unknownLine [
-	"(lineEnd negate plus) token optional, lineEnd"
-	
-	^ super unknownLine
-	==> [ :nodes |
-			self copyLine: nodes from: 1 to: nodes size ]
+PPEsopeRewriter >> translateEsopeArray: inputStream [
+	| regex i |
+	i := 1.
+	''
+		writeStreamDo: [ :outputStream | 
+			regex := self class regexForEsopeWithArray.
+			(regex matchingRangesIn: inputStream)
+				do: [ :interval | 
+					(self
+						fortranOperator: inputStream
+						from: interval first
+						to: interval last)
+						ifFalse:
+							[ i to: interval first - 1 do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+							outputStream << 'ESOar('.
+							i := interval first.
+							[ (inputStream at: i) == $( ]
+								whileFalse: [ outputStream nextPut: (inputStream at: i).
+									i := i + 1 ].
+							outputStream nextPut: $,.
+							[ (inputStream at: i) == $) ]
+								whileFalse: [ outputStream nextPut: (inputStream at: i + 1).
+									i := i + 1 ].
+							i + 1 to: interval last do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+							i := interval last + 1 ] ].
+			i to: inputStream size do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+			^ outputStream contents ]
+]
+
+{ #category : #rules }
+PPEsopeRewriter >> translateEsopeAt: inputStream [
+	| regex i |
+	i := 1.
+	''
+		writeStreamDo: [ :outputStream | 
+			regex := '[a-zA-Z0-9]+\.[a-zA-Z0-9]+' asRegexIgnoringCase.
+			(regex matchingRangesIn: inputStream)
+				do: [ :interval | 
+					(self
+						fortranOperator: inputStream from: interval first to: interval last)
+						ifFalse:
+							[ i to: interval first - 1 do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+							outputStream << 'ESOat('.
+							i := interval first.
+							[ (inputStream at: i) == $. ]
+								whileFalse: [ outputStream nextPut: (inputStream at: i).
+									i := i + 1 ].
+							outputStream nextPut: $,.
+							i + 1 to: interval last do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+							outputStream nextPut: $).
+							i := interval last + 1 ] ].
+			i to: inputStream size do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+			^ outputStream contents ]
+]
+
+{ #category : #rules }
+PPEsopeRewriter >> translateEsopeSlash: inputStream [
+	| regex i |
+	i := 1.
+	''
+		writeStreamDo: [ :outputStream | 
+			regex := '[a-zA-Z0-9.]+\(/[0-9]+\)' asRegexIgnoringCase.
+			(regex matchingRangesIn: inputStream)
+				do: [ :interval | 
+					i to: interval first - 1 do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+					outputStream << 'ESOsl('.
+					i := interval first.
+					[ (inputStream at: i) == $( ]
+						whileFalse: [ outputStream nextPut: (inputStream at: i).
+							i := i + 1 ].
+					outputStream nextPut: $,.
+					i + 2 to: interval last do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+					i := interval last + 1 ].
+			i to: inputStream size do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
+			^ outputStream contents]
 ]

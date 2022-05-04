@@ -645,6 +645,18 @@ PPEsopeGrammarTest >> testBigFile [
 ]
 
 { #category : #tests }
+PPEsopeGrammarTest >> testFortranLine [
+	self parse: '      subroutine test(brr)
+' rule: #fortranLine.
+]
+
+{ #category : #tests }
+PPEsopeGrammarTest >> testFortranLineEmpty [
+	self parse: '
+' rule: #fortranLine.
+]
+
+{ #category : #tests }
 PPEsopeGrammarTest >> testInclude [
 	self parse: '#include <implicit.h>
 ' rule: #include.
@@ -708,13 +720,9 @@ PPEsopeGrammarTest >> testSegdef [
 PPEsopeGrammarTest >> testSegdes [
 	self parse: '      segdes,alist
 ' rule: #segdes.
-	self fail: 'segdes,alist' rule: #segdes.
-]
-
-{ #category : #tests }
-PPEsopeGrammarTest >> testSegdes2 [
 	self parse: '        segdes,pshp1*NOMOD
-' rule: #segdes
+' rule: #segdes.
+	self fail: 'segdes,alist' rule: #segdes.
 ]
 
 { #category : #tests }
@@ -739,16 +747,4 @@ PPEsopeGrammarTest >> testSmallFile [
 { #category : #tests }
 PPEsopeGrammarTest >> testStart [
 	self parse: self class esopeSmallFile
-]
-
-{ #category : #tests }
-PPEsopeGrammarTest >> testUnknownLine [
-	self parse: '      subroutine test(brr)
-' rule: #unknownLine.
-]
-
-{ #category : #tests }
-PPEsopeGrammarTest >> testUnknownLineEmpty [
-	self parse: '
-' rule: #unknownLine.
 ]
