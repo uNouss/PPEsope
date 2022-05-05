@@ -36,16 +36,18 @@ PPEsopeRewriter >> fortranLine [
 
 	^ super fortranLine
 		==> [ :nodes | 
-			stream
-				<<
-					(self
-						translateEsopeAt:
-							(self translateEsopeArray: (self
-								translateEsopeSlash:
-									(''
-										writeStreamDo: [ :str | 
-											1 to: nodes size do: [ :i | str << (nodes at: i) value ].
-											str contents ])))) ]
+			| line |
+			line := ''
+				writeStreamDo: [ :str | 
+					nodes do: [ :node | str << node value ].
+					str contents ].
+			(line asLowercase beginsWith: 'c')
+				ifTrue: [ stream << line ]
+				ifFalse: [ stream
+						<<
+							(self
+								translateEsopeAt: (self translateEsopeArray: (self translateEsopeSlash: line))) ] ]
+				
 ]
 
 { #category : #rules }
