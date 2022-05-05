@@ -50,7 +50,7 @@ PPEsopeRewriter >> fortranLine [
 				
 ]
 
-{ #category : #rules }
+{ #category : #utilities }
 PPEsopeRewriter >> fortranOperator: esopeAtIdentifier [ 
 	| uppercaseIdentifier |
 	uppercaseIdentifier := esopeAtIdentifier asUppercase.
@@ -60,7 +60,7 @@ PPEsopeRewriter >> fortranOperator: esopeAtIdentifier [
 				or: [ uppercaseIdentifier endsWith: operator ] ]
 ]
 
-{ #category : #rules }
+{ #category : #utilities }
 PPEsopeRewriter >> fortranOperator: esopeAtIdentifier from: start to: end [
 	| uppercaseIdentifier |
 	start <= 1
@@ -177,7 +177,7 @@ PPEsopeRewriter >> segsup [
 			]
 ]
 
-{ #category : #rules }
+{ #category : #utilities }
 PPEsopeRewriter >> translateEsopeArray: inputStream [
 	| regex i |
 	i := 1.
@@ -207,7 +207,7 @@ PPEsopeRewriter >> translateEsopeArray: inputStream [
 			^ outputStream contents ]
 ]
 
-{ #category : #rules }
+{ #category : #utilities }
 PPEsopeRewriter >> translateEsopeAt: inputStream [
 	| regex i |
 	i := 1.
@@ -233,7 +233,7 @@ PPEsopeRewriter >> translateEsopeAt: inputStream [
 			^ outputStream contents ]
 ]
 
-{ #category : #rules }
+{ #category : #utilities }
 PPEsopeRewriter >> translateEsopeSlash: inputStream [
 	| regex i |
 	i := 1.
