@@ -17,6 +17,16 @@ PPEsopeRewriter class >> regexForEsopeWithArray [
 	^ '([a-zA-Z0-9]+\.[a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
 ]
 
+{ #category : #regex }
+PPEsopeRewriter class >> regexForEsopeWithDot [
+	^ '[a-zA-Z0-9]+\.[a-zA-Z0-9]+' asRegexIgnoringCase
+]
+
+{ #category : #regex }
+PPEsopeRewriter class >> regexForEsopeWithSlash [
+	^ '[a-zA-Z0-9.]+\(/[0-9]+\)' asRegexIgnoringCase
+]
+
 { #category : #utilities }
 PPEsopeRewriter >> copyLine: nodes from: start to: end [
 	start to: end do: [ :i | stream << (nodes at: i) value ]
@@ -213,7 +223,7 @@ PPEsopeRewriter >> translateEsopeAt: inputStream [
 	i := 1.
 	''
 		writeStreamDo: [ :outputStream | 
-			regex := '[a-zA-Z0-9]+\.[a-zA-Z0-9]+' asRegexIgnoringCase.
+			regex := self class regexForEsopeWithDot.
 			(regex matchingRangesIn: inputStream)
 				do: [ :interval | 
 					(self
@@ -239,7 +249,7 @@ PPEsopeRewriter >> translateEsopeSlash: inputStream [
 	i := 1.
 	''
 		writeStreamDo: [ :outputStream | 
-			regex := '[a-zA-Z0-9.]+\(/[0-9]+\)' asRegexIgnoringCase.
+			regex := self class regexForEsopeWithSlash.
 			(regex matchingRangesIn: inputStream)
 				do: [ :interval | 
 					i to: interval first - 1 do: [ :idx | outputStream nextPut: (inputStream at: idx) ].
