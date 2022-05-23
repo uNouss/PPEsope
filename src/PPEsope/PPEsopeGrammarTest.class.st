@@ -392,6 +392,123 @@ C     -- terminer en echec
 ]
 
 { #category : #tests }
+PPEsopeGrammarTest class >> esopeFileWithCallStatement [
+
+	^ '      subroutine valrma(
+     & pval,
+     & status)
+C xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Cb  Subroutine : valrma (langage Esope)
+Cb  Module     : VECTOR
+Cb  Auteur     : L.Brault
+Cb  Date       : Octobre-2000
+Cb  Service    : EPDN 
+Cb  But        : effacer toutes les valeurs d''un conteneur "values"
+C xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+C
+Cas  pval   : un conteneur "values"
+Cas  status : status d''execution (status=0 <=> succes)
+C
+C
+C Fichier a inclure dans tout source PACOME, ESOPE ou FORTRAN.
+C
+C Utilisation lors de la compilation :
+C
+C source Fortran :
+C  f77 -Dfortran -c -I{repertoires d''inclusion} fichier.F
+C
+C source Esope :
+C  cpp -P -I{repertoires d''inclusion} fichier.E > fichier.e
+C
+C source Fortran et Esope pour le Cray :
+C  cpp -Dcray -I{repertoires d''inclusion} fichier.[F,E] > fichier_source_cray
+C
+C  Auteur  : L.Caramelle
+C  Service : Serlog Systemes.
+C  Date    : 28/03/93.
+C
+C
+C  Modif   : G.Martinez
+C  Service : EPNC.
+C  Date    : 24/08/95.
+C  Sujet   : Portage sur CRAY.
+C
+C  Modif   : M.PONCE
+C            (origine L.BRAULT)
+C  Service : EPDN
+C  Date    : 19/07/2000
+C  Sujet   : IMPLICIT_H_INCLUDED
+C
+
+
+      implicit logical (a-z)
+
+C
+C values      : valeurs sur un type de base GIBIANE
+C valtyp      : type dans {FLOTTANT, ENTIER, LOGIQUE, CHAINE}
+C valf(valnf) : valnf FLOTTANT
+C vale(valne) : valne ENTIER
+C vall(valnl) : valnl LOGIQUE
+C valc(valnc) : valnc CHAINE
+C vals(valnc) : valnc tailles de CHAINE
+C valsmx      : maximum des tailles de CHAINE
+C
+      integer valnf
+C
+      integer valne
+C
+      integer valnl
+C
+      integer valnc
+C
+      integer valsmx
+C
+      segment,values
+        character*8        valtyp
+        real               valf(valnf)
+        integer            vale(valne)
+        logical            vall(valnl)
+        character*(valsmx) valc(valnc)
+        integer            vals(valnc)
+      endsegment
+C
+      pointeur      pval.values
+      integer       status
+C
+      status=0
+C
+C     -- ouvrir le conteneur "values"
+      segact,pval
+      valnf =pval.valf(/1)
+      valne =pval.vale(/1)
+      valnl =pval.vall(/1)
+      valnc =pval.valc(/2)
+      valsmx=pval.valc(/1)
+C
+C     -- vider le conteneur "values"
+      valnf = 0
+      valne = 0
+      valnl = 0
+      valnc = 0
+      valsmx= 0
+      segadj,pval
+C
+C     -- fermer le conteneur "values"
+      segdes,pval*MOD
+C
+C     -- terminer avec succes      
+      return
+C
+C     -- terminer en echec
+ 999  continue      
+      call edmess(''valrma: routine en echec'')
+      status=1
+      return
+      end
+'
+]
+
+{ #category : #tests }
 PPEsopeGrammarTest class >> esopeSmallFile [
 	^ '      subroutine stgbrk(
 C     == entrees ==

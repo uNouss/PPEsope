@@ -27,6 +27,19 @@ PPEsopeRewriter class >> regexForEsopeWithSlash [
 	^ '[a-zA-Z0-9.]+\(/[0-9]+\)' asRegexIgnoringCase
 ]
 
+{ #category : #regex }
+PPEsopeRewriter class >> rewriteFrom: esopeFile to: annotatedFile [
+
+	| rewriter |
+	rewriter := self new.
+	rewriter parse: esopeFile.
+	annotatedFile asFileReference writeStreamDo: [ :stream | 
+		stream truncate.
+		stream << (rewriter output
+			 replaceAllRegex: Character cr asString
+			 with: Character lf asString) ]
+]
+
 { #category : #utilities }
 PPEsopeRewriter >> copyLine: nodes from: start to: end [
 	start to: end do: [ :i | stream << (nodes at: i) value ]
