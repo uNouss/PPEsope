@@ -21,7 +21,8 @@ Class {
 		'endOfLine',
 		'beginOfLine',
 		'segIdentifier',
-		'fortranLine'
+		'fortranLine',
+		'emptyLine'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -42,13 +43,21 @@ PPEsopeGrammar >> comma [
 ]
 
 { #category : #accessing }
+PPEsopeGrammar >> emptyLine [
+
+	^ spaces , endOfLine
+]
+
+{ #category : #accessing }
 PPEsopeGrammar >> endOfLine [
 	^ (Character cr asPParser / Character lf asPParser)  plus
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> file [
-	^ (segact / segadj / segdef / segdes / segini /  segsup / pointer / include / fortranLine) plus
+
+	^ (segact / segadj / segdef / segdes / segini / segsup / pointer
+	   / include / fortranLine / emptyLine) plus
 ]
 
 { #category : #accessing }

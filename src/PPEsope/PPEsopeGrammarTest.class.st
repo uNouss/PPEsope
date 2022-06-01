@@ -510,6 +510,7 @@ C     -- terminer en echec
 
 { #category : #tests }
 PPEsopeGrammarTest class >> esopeSmallFile [
+
 	^ '      subroutine stgbrk(
 C     == entrees ==
      & alist,splist,
@@ -762,6 +763,15 @@ PPEsopeGrammarTest >> testBigFile [
 ]
 
 { #category : #tests }
+PPEsopeGrammarTest >> testEmptyLine [
+
+	self
+		parse: '       
+'
+		rule: #emptyLine
+]
+
+{ #category : #tests }
 PPEsopeGrammarTest >> testFortranLine [
 	self parse: '      subroutine test(brr)
 ' rule: #fortranLine.
@@ -807,6 +817,16 @@ PPEsopeGrammarTest >> testSegadj [
 	self parse: '      segadj,alist
 ' rule: #segadj.
 	self fail: 'segadj,alist' rule: #segadj.
+]
+
+{ #category : #tests }
+PPEsopeGrammarTest >> testSegadjVcAcc226 [
+
+	self
+		parse: '	segadj,pval
+'
+		rule: #segadj.
+	self fail: 'segadj,pval' rule: #segadj
 ]
 
 { #category : #tests }
