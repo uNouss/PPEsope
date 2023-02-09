@@ -1,6 +1,9 @@
 Class {
 	#name : #PPEsopeRewriterTest,
 	#superclass : #PP2CompositeNodeTest,
+	#instVars : [
+		'sixSpaces'
+	],
 	#category : #'PPEsope-Tests'
 }
 
@@ -269,14 +272,17 @@ PPEsopeRewriterTest >> parserClass [
 
 { #category : #running }
 PPEsopeRewriterTest >> setUp [
+
 	super setUp.
 	parser initStream.
+	sixSpaces := '      '
 ]
 
 { #category : #accessing }
 PPEsopeRewriterTest >> testFortranLine [
+
 	| sourcecode |
-	sourcecode := '      subroutine test(brr)
+	sourcecode := sixSpaces , 'subroutine test(brr)
 '.
 	self parse: sourcecode rule: #fortranLine.
 
@@ -285,8 +291,11 @@ PPEsopeRewriterTest >> testFortranLine [
 
 { #category : #accessing }
 PPEsopeRewriterTest >> testFortranLineEsoAt [
-	self parse: '      rlist.ilist=0
-' rule: #fortranLine.
+
+	self
+		parse: sixSpaces , 'rlist.ilist=0
+'
+		rule: #fortranLine.
 	self assert: parser output equals: '      ESOat(rlist,ilist)=0
 '
 ]
@@ -310,6 +319,15 @@ PPEsopeRewriterTest >> testPointer [
 	| sourcecode |
 	sourcecode := 'pointeur splist.list
 '.
+	self parse: sixSpaces, sourcecode rule: #pointer.
+	self assert: parser output equals: 'cESO  ' , sourcecode
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testPointerWithSpaces [
+	| sourcecode |
+	sourcecode := '   pointeur t1.mytab    
+'.
 	self parse: '      ' , sourcecode rule: #pointer.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
@@ -319,7 +337,7 @@ PPEsopeRewriterTest >> testSegact [
 	| sourcecode |
 	sourcecode := 'segact,splist
 '.
-	self parse: '      ' , sourcecode rule: #segact.
+	self parse: sixSpaces, sourcecode rule: #segact.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
@@ -329,7 +347,7 @@ PPEsopeRewriterTest >> testSegactWithSpaces [
 	
 	sourcecode := '  segact,xs
 '.
-	self parse: '      ' , sourcecode rule: #segact.
+	self parse: sixSpaces, sourcecode rule: #segact.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
@@ -338,7 +356,7 @@ PPEsopeRewriterTest >> testSegadj [
 	| sourcecode |
 	sourcecode := 'segadj,aplist
 '.
-	self parse: '      ' , sourcecode rule: #segadj.
+	self parse: sixSpaces, sourcecode rule: #segadj.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
@@ -358,7 +376,43 @@ cESO    integer            vale(valne)
 cESO  endsegment
 '.
 	self parse: sourcecode rule: #segdef.
-	self assert: parser output equals: finalcode.
+	self assert: (parser outputForSegment) equals: finalcode.
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testSegdefFromBorbk [
+
+	| rewriterdCode inputCode |
+	inputCode := '      SEGMENT , pstr
+        character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+        integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+      endsegment
+'.
+	rewriterdCode := 'cESO  SEGMENT , pstr
+cESO    character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+cESO    integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+cESO  endsegment
+'.
+	self parse: inputCode rule: #segdef.
+	self assert: parser outputForSegment equals: rewriterdCode
+]
+
+{ #category : #accessing }
+PPEsopeRewriterTest >> testSegdefUpperCase [
+
+	| rewriterdCode inputCode |
+	inputCode := '      SEGMENT , PSTR
+        character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+        integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+      endsegment
+'.
+	rewriterdCode := 'cESO  SEGMENT , PSTR
+cESO    character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+cESO    integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+cESO  endsegment
+'.
+	self parse: inputCode rule: #segdef.
+	self assert: parser outputForSegment equals: rewriterdCode
 ]
 
 { #category : #accessing }
@@ -366,7 +420,7 @@ PPEsopeRewriterTest >> testSegdes [
 	| sourcecode |
 	sourcecode := 'segdes,alist
 '.
-	self parse: '      ' , sourcecode rule: #segdes.
+	self parse: sixSpaces, sourcecode rule: #segdes.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
@@ -375,7 +429,7 @@ PPEsopeRewriterTest >> testSegini [
 	| sourcecode |
 	sourcecode := 'segini,rlist
 '.
-	self parse: '      ' , sourcecode rule: #segini.
+	self parse: sixSpaces, sourcecode rule: #segini.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
@@ -384,14 +438,14 @@ PPEsopeRewriterTest >> testSegsup [
 	| sourcecode |
 	sourcecode := 'segsup,rlist
 '.
-	self parse: '      ' , sourcecode rule: #segsup.
+	self parse: sixSpaces, sourcecode rule: #segsup.
 	self assert: parser output equals: 'cESO  ' , sourcecode
 ]
 
 { #category : #accessing }
 PPEsopeRewriterTest >> testSmallFile [
 	self parse: self class esopeSmallFile rule: #start.
-	self assert: parser output equals: self class esopeSmallFileProcessed
+	self assert: parser outputForSegment equals: self class esopeSmallFileProcessed
 ]
 
 { #category : #accessing }

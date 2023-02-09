@@ -13,16 +13,19 @@ Class {
 		'segdes',
 		'segini',
 		'segsup',
-		'spaces',
 		'notEndLine',
 		'lines',
 		'identifier',
-		'comma',
 		'endOfLine',
 		'beginOfLine',
 		'segIdentifier',
 		'fortranLine',
-		'emptyLine'
+		'emptyLine',
+		'optionalBlanks',
+		'endToken',
+		'segmentToken',
+		'dotToken',
+		'pointerKeyWord'
 	],
 	#category : #'PPEsope-Parser'
 }
@@ -34,121 +37,183 @@ PPEsopeGrammar class >> getSourceFromFile: filename [
 
 { #category : #accessing }
 PPEsopeGrammar >> beginOfLine [
-	^ '      ' asPParser token
+
+	^ '      ' asPParser flatten
 ]
 
-{ #category : #accessing }
-PPEsopeGrammar >> comma [
-	^ $, asPParser
+{ #category : #tokens }
+PPEsopeGrammar >> dotToken [
+
+	^ self symbol: $.
 ]
 
 { #category : #accessing }
 PPEsopeGrammar >> emptyLine [
 
-	^ spaces , endOfLine
+	^ optionalBlanks , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
 PPEsopeGrammar >> endOfLine [
-	^ (Character cr asPParser / Character lf asPParser)  plus
+
+	^ (Character cr asPParser / Character lf asPParser) plus flatten
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
+PPEsopeGrammar >> endToken [
+
+	^ (self terminal: 'end') flatten
+]
+
+{ #category : #'grammar-helper' }
+PPEsopeGrammar >> esopeLine: esopeKeyword [
+
+	^ beginOfLine , optionalBlanks
+	  , (self terminal: esopeKeyword) flatten , segIdentifier
+	  , optionalBlanks , endOfLine
+]
+
+{ #category : #grammar }
 PPEsopeGrammar >> file [
 
 	^ (segact / segadj / segdef / segdes / segini / segsup / pointer
 	   / include / fortranLine / emptyLine) plus
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> fortranLine [
-	^ (endOfLine negate plus) token optional, endOfLine
+
+	^ endOfLine negate star flatten , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
 PPEsopeGrammar >> identifier [
-	^ #letter asPParser , #word asPParser star.
+
+	^ (#letter asPParser , #word asPParser star) flatten
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> include [
-	^ '#include' asPParser, spaces, includeName, endOfLine
+
+	self flag: #FIXME. "pas du Esope/Fortran, directive du preprocesseur.
+	mais utilisé pour inclure définition des segments, ..."
+	
+	^ (self terminal: '#include') flatten , optionalBlanks , includeName , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> includeName [
-	^ ($" asPParser / $< asPParser), (identifier, $. asPParser, identifier) token, ($" asPParser  / $>  asPParser)
+
+	^ ((self symbol: $") , identifier , dotToken , identifier
+	   , (self symbol: $")) flatten
+	  / ((self symbol: $<) , identifier , dotToken , identifier
+		   , (self symbol: $>)) flatten
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> lines [
-	^ notEndLine star 
+
+	^ notEndLine star
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> notEndLine [
-	^ beginOfLine, 'end' asPParser not, endOfLine negate plus, endOfLine
+
+	^ beginOfLine 
+	  , (self terminal: 'end') not 
+	  , endOfLine negate plus flatten
+	  , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
+PPEsopeGrammar >> optionalBlanks [
+
+	^ #blank asPParser star flatten
+]
+
+{ #category : #grammar }
 PPEsopeGrammar >> pointer [
-	^ beginOfLine, 'pointeur' asPParser, spaces, pointerName, endOfLine
+
+	^ beginOfLine , optionalBlanks , pointerKeyWord
+	  , optionalBlanks , pointerName , optionalBlanks , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
+PPEsopeGrammar >> pointerKeyWord [
+
+	^ (self terminal: 'pointeur') flatten
+]
+
+{ #category : #tokens }
 PPEsopeGrammar >> pointerName [
-	^ identifier, $. asPParser, identifier
+
+	^ (identifier , dotToken , identifier) flatten
 ]
 
-{ #category : #accessing }
-PPEsopeGrammar >> rpar [
-	^ $) asPParser 
-]
-
-{ #category : #accessing }
+{ #category : #tokens }
 PPEsopeGrammar >> segIdentifier [
-	^ endOfLine negate plus
+
+	^ endOfLine negate plus flatten
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> segact [
-	^ beginOfLine, spaces, 'segact' asPParser, segIdentifier, endOfLine
+
+	^ self esopeLine: 'segact'
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> segadj [
-	^ beginOfLine, spaces, 'segadj' asPParser, segIdentifier, endOfLine
+
+	^ self esopeLine: 'segadj'
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> segdef [
 
-	^ beginOfLine, spaces, 'segment' asPParser, segIdentifier, endOfLine,
-	lines,
-	beginOfLine, spaces, 'end' asPParser , spaces, 'segment' asPParser, endOfLine
+	^ (self esopeLine: 'segment') , lines , beginOfLine , optionalBlanks
+	  , endToken , optionalBlanks , segmentToken , optionalBlanks
+	  , endOfLine
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> segdes [
-	^ beginOfLine, spaces, 'segdes' asPParser, segIdentifier, endOfLine
+
+	^ self esopeLine: 'segdes'
 ]
 
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> segini [
-	^ beginOfLine, spaces, 'segini' asPParser, segIdentifier, endOfLine
+
+	^ self esopeLine: 'segini'
 ]
 
-{ #category : #accessing }
+{ #category : #tokens }
+PPEsopeGrammar >> segmentToken [
+
+	^ (self terminal: 'segment') flatten
+]
+
+{ #category : #grammar }
 PPEsopeGrammar >> segsup [
-	^ beginOfLine , spaces, 'segsup' asPParser, segIdentifier, endOfLine
+
+	" ^ beginOfLine , optionalBlanks , self terminal:
+		  'segsup' , segIdentifier , endOfLine"
+	^ self esopeLine: 'segsup'
 ]
 
-{ #category : #accessing }
-PPEsopeGrammar >> spaces [
-	^ #space asPParser star
-]
-
-{ #category : #accessing }
+{ #category : #grammar }
 PPEsopeGrammar >> start [
 	^ file end
+]
+
+{ #category : #'grammar-helper' }
+PPEsopeGrammar >> symbol: aLetter [
+
+	^ aLetter asPParser
+]
+
+{ #category : #'grammar-helper' }
+PPEsopeGrammar >> terminal: aString [
+	^ aString asPParser caseInsensitive
 ]
