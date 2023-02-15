@@ -204,10 +204,9 @@ PPEsopeRewriter >> segdef [
 	  , endToken , optionalBlanks , segmentToken , optionalBlanks
 	  , endOfLine"
 
-	^ super segdef ==> [ :nodes | 
+	^ super segdef ==> [ :nodes |
 	  self annotateByEsopePrefix.
-	  self copyTokens: nodes from: 2 to: 4.
-	  self addLineSeparator.
+	  self copyTokens: nodes from: 2 to: 6.
 	  self processLinesInsideSegment: (nodes at: 7).
 	  self annotateByEsopePrefix.
 	  self copyTokens: nodes from: 10 to: nodes size ]

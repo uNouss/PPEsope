@@ -806,8 +806,11 @@ PPEsopeGrammarTest >> testFortranLine [
 
 { #category : #tests }
 PPEsopeGrammarTest >> testFortranLineEmpty [
-	self parse: '
-' rule: #fortranLine.
+
+	self
+		parse: '
+'
+		rule: #fortranLine
 ]
 
 { #category : #tests }
