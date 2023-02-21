@@ -315,6 +315,17 @@ PPEsopeRewriterTest >> testFortranLineEsoSlash [
 ]
 
 { #category : #accessing }
+PPEsopeRewriterTest >> testFortranLineNoEsoAt [
+
+	self
+		parse: sixSpaces , 'call newbook(lib,''le petit chaperon rouge'',10,2.12)
+'
+		rule: #fortranLine.
+	self assert: parser output equals: '      call newbook(lib,''le petit chaperon rouge'',10,2.12)
+'
+]
+
+{ #category : #accessing }
 PPEsopeRewriterTest >> testPointer [
 	| sourcecode |
 	sourcecode := 'pointeur splist.list

@@ -14,17 +14,17 @@ PPEsopeRewriter class >> ignoredNames [
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithArray [
-	^ '([a-zA-Z0-9]+\.[a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
+	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
 ]
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithDot [
-	^ '[a-zA-Z0-9]+\.[a-zA-Z0-9]+' asRegexIgnoringCase
+	^ '[a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+' asRegexIgnoringCase
 ]
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithSlash [
-	^ '[a-zA-Z0-9.]+\(/[0-9]+\)' asRegexIgnoringCase
+	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(/[a-zA-Z0-9.]+\)' asRegexIgnoringCase
 ]
 
 { #category : #regex }
