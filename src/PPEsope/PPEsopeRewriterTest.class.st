@@ -90,7 +90,7 @@ C PROPRIETE: lstg >= 0
 C
       integer lstg
 cESO  segment string
-cESO    character cstg*(lstg)
+        character cstg*(lstg)
 cESO  endsegment
 C
 C nlist : capacite de la liste
@@ -100,8 +100,8 @@ C PROPRIETE: 0<= ilist <= nlist
 C
       integer nlist
 cESO  segment,list
-cESO    integer ilist
-cESO    integer elist(nlist)
+        integer ilist
+        integer elist(nlist)
 cESO  endsegment
 C
 cESO  pointeur alist.list
@@ -381,9 +381,9 @@ PPEsopeRewriterTest >> testSegdef [
       endsegment
 '.
 	finalcode := 'cESO  segment,values
-cESO    character*8        valtyp
-cESO    real               valf(valnf)
-cESO    integer            vale(valne)
+        character*8        valtyp
+        real               valf(valnf)
+        integer            vale(valne)
 cESO  endsegment
 '.
 	self parse: sourcecode rule: #segdef.
@@ -400,8 +400,8 @@ PPEsopeRewriterTest >> testSegdefFromBorbk [
       endsegment
 '.
 	rewriterdCode := 'cESO  SEGMENT , pstr
-cESO    character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
-cESO    integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+        character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+        integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
 cESO  endsegment
 '.
 	self parse: inputCode rule: #segdef.
@@ -418,8 +418,8 @@ PPEsopeRewriterTest >> testSegdefUpperCase [
       endsegment
 '.
 	rewriterdCode := 'cESO  SEGMENT , PSTR
-cESO    character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
-cESO    integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
+        character*8 nomcod, date, heure, typseg(nbseg), typref(nbref)
+        integer     ibseg, ibref,        pntseg(nbseg), pntref(nbref)
 cESO  endsegment
 '.
 	self parse: inputCode rule: #segdef.
