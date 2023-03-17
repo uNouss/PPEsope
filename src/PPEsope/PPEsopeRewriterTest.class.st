@@ -468,6 +468,15 @@ PPEsopeRewriterTest >> testTranslateEsopeArray [
 ]
 
 { #category : #accessing }
+PPEsopeRewriterTest >> testTranslateEsopeArrayAndEsopeAtWithExpressionAsSubscript [
+
+		self
+		assert:
+			(parser translateEsopeAt: (parser translateEsopeArray: 'ur.ubb(jr + 1)'))
+		equals: 'ESOar(ESOat(ur,ubb),jr + 1)'
+]
+
+{ #category : #accessing }
 PPEsopeRewriterTest >> testTranslateEsopeArrayDotInsidePar [
 	self
 		assert: (parser translateEsopeAt: (parser translateEsopeArray: 'rlist.elist(rlist.ilist)=ms'))

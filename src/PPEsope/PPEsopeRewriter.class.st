@@ -14,6 +14,10 @@ PPEsopeRewriter class >> ignoredNames [
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithArray [
+
+	self flag: #FIXME. "how to deal with: ur.ubb(jr + 1).
+	By now, we have ESOat(ur, ubb)(jr+1) instead of ESOar(ESOat(ub, ubb), jr + 1).
+	By now we are not able to process this kind of statement when the subscript is an expression and not a litteral integer"
 	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
 ]
 
@@ -168,10 +172,21 @@ PPEsopeRewriter >> processLinesInsideSegment: anOrderedCollection [
 
 	"  (beginOfLine, 'end' asPParser not, endOfLine negate plus, endOfLine) star"
 
-	anOrderedCollection do: [ :line |
-		self annotateByEsopePrefix.
+	self flag: #TODO.
+	" #processLinesInsideSegment 
+	There are several ways of handling the components of a segment:
+	- let a fortran77 parser handle them for us at this stage. this means not annotating them and having to process them later when parsing the AST obtained by the fortran77 parser by using the position of the token.
+	- modify our grammars to handle the components correctly
+	- Annotate them, and be a master of regular expressions during ESOPE comment processing."
+
+	"option2: not yet implemented"
+	"option3: tested and not approuved.
+		""self annotateByEsopePrefix.
 		stream << (line at: 3) value.
-		self addLineSeparator ]
+		self addLineSeparator"""
+
+	anOrderedCollection do: [ :line | "option1" 
+		line do: [ :part | part ifNotNil: [ stream << part value ] ] ]
 ]
 
 { #category : #rules }
@@ -204,7 +219,13 @@ PPEsopeRewriter >> segdef [
 	  , endToken , optionalBlanks , segmentToken , optionalBlanks
 	  , endOfLine"
 
-	^ super segdef ==> [ :nodes |
+	" #processLinesInsideSegment 
+	There are several ways of handling the components of a segment:
+	- let a fortran77 parser handle them for us at this stage. this means not annotating them and having to process them later when parsing the AST obtained by the fortran77 parser.
+	- modify our grammars to handle the components correctly
+	- Annotate them, and be a master of regular expressions during ESOPE comment processing."
+
+	^ super segdef ==> [ :nodes | 
 	  self annotateByEsopePrefix.
 	  self copyTokens: nodes from: 2 to: 6.
 	  self processLinesInsideSegment: (nodes at: 7).
