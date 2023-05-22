@@ -159,7 +159,7 @@ cESO            segact,sp
                 if(lsp.eq.0)then
                   idx=1
                 else
-                  idx=index(ESOat(xs,cstg)(first:last),
+                  idx=index(ESOar(ESOat(xs,cstg),first:last),
      +                      ESOat(sp,cstg))
                 endif
                 if(idx.eq.1) then
@@ -198,7 +198,7 @@ cESO            segact,sp
                 if(lsp.eq.0)then
                   idx=1
                 else
-                  idx=index(ESOat(xs,cstg)(first:last),
+                  idx=index(ESOar(ESOat(xs,cstg),first:last),
      +                      ESOat(sp,cstg))
                 endif
                 if(idx.ne.0) then
@@ -236,7 +236,7 @@ C
 C             -- ranger morceau 
               lstg=mlast-mfirst+1
 cESO          segini,ms
-                ESOat(ms,cstg)=ESOat(xs,cstg)(mfirst:mlast)
+                ESOat(ms,cstg)=ESOar(ESOat(xs,cstg),mfirst:mlast)
 cESO          segdes,ms
               ESOat(rlist,ilist)=ESOat(rlist,ilist)+1
               if((ESOat(rlist,ilist)).gt.nlist)then
@@ -482,6 +482,21 @@ PPEsopeRewriterTest >> testTranslateEsopeArrayDotInsidePar [
 	self
 		assert: (parser translateEsopeAt: (parser translateEsopeArray: 'rlist.elist(rlist.ilist)=ms'))
 		equals: 'ESOar(ESOat(rlist,elist),ESOat(rlist,ilist))=ms'
+]
+
+{ #category : #tests }
+PPEsopeRewriterTest >> testTranslateEsopeArrayRelbk [
+	self
+		assert: (parser translateEsopeAt: (parser translateEsopeArray: 'ur.ubb(jr) = ur.ubb(jr + 1)'))
+		equals: 'ESOar(ESOat(ur,ubb),jr) = ESOar(ESOat(ur,ubb),jr + 1)'
+]
+
+{ #category : #tests }
+PPEsopeRewriterTest >> testTranslateEsopeArrayWithExpression [
+	self
+		assert:
+			(parser translateEsopeAt: (parser translateEsopeArray: 'ur.ubb(jr + 1)'))
+		equals: 'ESOar(ESOat(ur,ubb),jr + 1)'
 ]
 
 { #category : #tests }

@@ -210,7 +210,7 @@ PPEsopeGrammar >> start [
 { #category : #'grammar-helper' }
 PPEsopeGrammar >> symbol: aLetter [
 
-	^ aLetter asPParser
+	^ aLetter asPParser caseInsensitive
 ]
 
 { #category : #'grammar-helper' }

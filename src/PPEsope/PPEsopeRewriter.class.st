@@ -18,17 +18,23 @@ PPEsopeRewriter class >> regexForEsopeWithArray [
 	self flag: #FIXME. "how to deal with: ur.ubb(jr + 1).
 	By now, we have ESOat(ur, ubb)(jr+1) instead of ESOar(ESOat(ub, ubb), jr + 1).
 	By now we are not able to process this kind of statement when the subscript is an expression and not a litteral integer"
-	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(([a-zA-Z0-9.]+)\)' asRegexIgnoringCase
+	"Using PetitParser2 instead of regex"
+
+	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(([^)]+)\)'
+		  asRegexIgnoringCase
 ]
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithDot [
+
 	^ '[a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+' asRegexIgnoringCase
 ]
 
 { #category : #regex }
 PPEsopeRewriter class >> regexForEsopeWithSlash [
-	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(/[a-zA-Z0-9.]+\)' asRegexIgnoringCase
+
+	^ '([a-zA-Z][a-zA-Z0-9]+\.[a-zA-Z][a-zA-Z0-9]+)\(/[^)]+\)'
+		  asRegexIgnoringCase
 ]
 
 { #category : #regex }
