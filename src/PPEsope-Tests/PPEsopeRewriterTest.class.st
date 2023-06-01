@@ -279,6 +279,22 @@ PPEsopeRewriterTest >> setUp [
 ]
 
 { #category : #tests }
+PPEsopeRewriterTest >> testEsoArImplicit [
+	self
+		assert:
+			(parser translateEsopeAt: (parser translateEsopeArray: 'a(b)'))
+		equals: 'ESOar(a,b)'
+]
+
+{ #category : #tests }
+PPEsopeRewriterTest >> testEsoSlImplicit [
+	self
+		assert:
+			(parser translateEsopeSlash: 'a(/b)')
+		equals: 'ESOsl(a,b)'
+]
+
+{ #category : #tests }
 PPEsopeRewriterTest >> testFortranLine [
 
 	| sourcecode |
